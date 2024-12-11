@@ -1,4 +1,3 @@
-import { QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useState, useEffect } from "react";
@@ -8,11 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export default function ScanPage() {
 	const videoRef = useRef(null);
 	const [qrCodeData, setQrCodeData] = useState<string[]>([]);
-
-	const handleScan = (data: string) => {
-		console.log("Scanning data", data);
-		setQrCodeData((prev) => [...prev, data]);
-	};
 
 	useEffect(() => {
 		let qrScanner: QrScanner | null = null;
