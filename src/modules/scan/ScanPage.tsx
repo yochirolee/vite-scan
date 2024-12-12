@@ -65,6 +65,7 @@ export default function ScanPage() {
 					highlightScanRegion: true,
 					highlightCodeOutline: true,
 					maxScansPerSecond: 1,
+                    
 				},
 			);
 
@@ -79,7 +80,7 @@ export default function ScanPage() {
 	return (
 		<main className="m-2  my-2 flex flex-col space-y-2">
 			<div className=" max-h-64 w-auto rounded-lg border-2 border-dashed ">
-				<video ref={videoRef}></video>
+				<video className="w-full h-full object-cover" ref={videoRef}></video>
 			</div>
 
 			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
