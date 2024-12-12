@@ -80,6 +80,7 @@ export default function ScanPage() {
 		<main className="m-2  my-2 flex flex-col space-y-2">
 			<div className=" aspect-square overflow-hidden  mx-auto rounded-lg relative border-gray-300">
 				<video className="w-full h-full object-cover" ref={videoRef}></video>
+                
 			</div>
 
 			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
@@ -91,7 +92,7 @@ export default function ScanPage() {
 				</form>
 
 				{qrCodeData.length > 0 ? (
-					<ScrollArea className="h-96  ">
+					<ScrollArea className="h-96 px-2  ">
 						{qrCodeData.map((item) => (
 							<button
 								key={item.split(",")[1]}
