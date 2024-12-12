@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/common/mode-toggle";
 import { useAuthContext } from "@/context/auth-context";
 import { LogOut } from "lucide-react";
-import { Outlet } from "react-router-dom";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { user, logout } = useAuthContext();
@@ -19,7 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 					)}
 				</div>
 			</nav>
-			<Outlet />
+
 			{children}
 		</div>
 	);

@@ -17,18 +17,16 @@ const queryClient = new QueryClient({
 
 function App() {
 	return (
-		<div className="max-w-md mx-auto border h-screen">
-			<main className="p-1 space-y-2">
-				<ThemeProvider defaultTheme="system" storageKey="theme">
-					<BrowserRouter>
-						<QueryClientProvider client={queryClient}>
+		<div className="max-w-md mx-auto">
+			<ThemeProvider defaultTheme="system" storageKey="theme">
+				<BrowserRouter>
+					<QueryClientProvider client={queryClient}>
 						<AuthProvider>
-								<AppRouter />
-							</AuthProvider>
-						</QueryClientProvider>
-					</BrowserRouter>
-				</ThemeProvider>
-			</main>
+							<AppRouter />
+						</AuthProvider>
+					</QueryClientProvider>
+				</BrowserRouter>
+			</ThemeProvider>
 		</div>
 	);
 }

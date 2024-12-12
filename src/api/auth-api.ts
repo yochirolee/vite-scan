@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const baseUrl =
+export const baseUrl =
 	process.env.NODE_ENV === "production"
 		? "https://apiv1trackingctenvioscom.vercel.app/api"
 		: "http://localhost:3001/api";
