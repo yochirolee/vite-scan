@@ -79,7 +79,7 @@ export default function ScanPage() {
 	return (
 		<main className="m-2  my-2 flex flex-col space-y-2">
 			<div className=" max-h-64 w-auto rounded-lg border-2 border-dashed ">
-				<video className="flex-1 " ref={videoRef}></video>
+				<video ref={videoRef}></video>
 			</div>
 
 			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
