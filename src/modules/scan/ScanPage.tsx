@@ -78,7 +78,9 @@ export default function ScanPage() {
 
 	return (
 		<main className="m-2  my-2 flex flex-col space-y-2">
-			<video className="rounded-lg aspect-video" ref={videoRef}></video>
+			<div className="flex flex-col items-center justify-center">
+				<video className="rounded-lg w-full aspect-video" ref={videoRef}></video>
+			</div>
 
 			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
 				<form onSubmit={handleSubmit}>
