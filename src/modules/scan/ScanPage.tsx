@@ -78,9 +78,8 @@ export default function ScanPage() {
 
 	return (
 		<main className="m-2  my-2 flex flex-col space-y-2">
-			<div className=" aspect-square overflow-hidden  mx-auto rounded-lg relative border-gray-300">
-				<video className="w-full h-full object-cover" ref={videoRef}></video>
-                
+			<div className=" aspect-square   overflow-hidden  rounded-lg relative border-gray-300">
+				<video className="flex-1 object-cover aspect-square" ref={videoRef}></video>
 			</div>
 
 			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
