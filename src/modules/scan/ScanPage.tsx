@@ -78,8 +78,8 @@ export default function ScanPage() {
 
 	return (
 		<main className="m-2  my-2 flex flex-col space-y-2">
-			<div className="flex flex-col items-center justify-center">
-				<video className="rounded-lg w-full aspect-video" ref={videoRef}></video>
+			<div className="grid h-1/3 flex-col items-center justify-center">
+				<video className="rounded-lg h-full w-full aspect-video" ref={videoRef}></video>
 			</div>
 
 			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
