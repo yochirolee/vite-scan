@@ -6,10 +6,10 @@ import { LogOut } from "lucide-react";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { user, logout } = useAuthContext();
 	return (
-		<div>
+		<div className="max-h-screen relative">
 			<nav className="flex justify-between  items-center ">
-				{user && <h1 className="text-sm ml-2">{user.username}</h1>}
-				<div className="flex items-center ">
+				{user && <h1 className="text-sm pl-2">{user.username}</h1>}
+				<div className="inline-flex items-center ">
 					<ModeToggle />
 					{user && (
 						<Button size="icon" variant="ghost" onClick={() => logout()}>

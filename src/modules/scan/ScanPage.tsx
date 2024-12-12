@@ -5,6 +5,8 @@ import QrScanner from "qr-scanner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuthContext } from "@/context/auth-context";
 import { baseUrl } from "@/api/auth-api";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default function ScanPage() {
 	const videoRef = useRef(null);
@@ -75,19 +77,54 @@ export default function ScanPage() {
 	}, []);
 
 	return (
-		<main className="p-2 my-2 relative h-screen space-y-2">
-			<div className="aspect-video h-1/3  mx-auto  flex items-center justify-center">
-				<video className="rounded-lg" ref={videoRef}></video>
-			</div>
+		<main className="m-2  my-2 flex flex-col space-y-2">
+			<video className="rounded-lg aspect-video" ref={videoRef}></video>
 
-			<div className=" rounded-lg h-2/5  shadow-sm space-y-2 ">
-				<h2 className="text-sm text-center">Listado de paquetes</h2>
+			<div className=" rounded-lg h-full my-1  shadow-sm space-y-2 ">
+				<form onSubmit={handleSubmit}>
+					<Button className="w-full" disabled={isSubmitting || hbls.length === 0}>
+						<Badge>{hbls.length}</Badge>
+						{isSubmitting ? "Enviando..." : "Confirmar Entrega"}
+					</Button>
+				</form>
+
 				{qrCodeData.length > 0 ? (
-					<ScrollArea className="h-[250px] p-4">
-						{hbls.map((data, index) => (
-							<div className="mb-2 p-2 border rounded " key={index}>
-								<p className="break-all text-xs whitespace-pre-wrap">{data}</p>
-							</div>
+					<ScrollArea className="h-96  ">
+						{qrCodeData.map((item) => (
+							<button
+								key={item.split(",")[1]}
+								className={cn(
+									"flex flex-col w-full my-1  items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
+									item.split(",")[1] === item.split(",")[1] && "bg-muted",
+								)}
+								/* onClick={() =>
+									setSelectedItem({
+										...selectedItem,
+										hbl: item.hbl,
+									})
+								} */
+							>
+								<div className="flex w-full flex-col gap-1">
+									<div className="flex items-center">
+										<div className="flex items-center gap-2">
+											<div className="font-semibold">{item.split(",")[1]}</div>
+											{/* {!item.read && <span className="flex h-2 w-2 rounded-full bg-blue-600" />} */}
+										</div>
+										{/* 	<div
+											className={cn(
+												"ml-auto text-xs",
+												selectedItem.hbl === item.hbl ? "text-foreground" : "text-muted-foreground",
+											)}
+										>
+											
+										</div> */}
+									</div>
+									<div className="text-xs font-medium">{item.split(",")[2]}</div>
+								</div>
+								<div className="line-clamp-2 text-xs text-muted-foreground">
+									{item.split(",")[3]}
+								</div>
+							</button>
 						))}
 					</ScrollArea>
 				) : (
@@ -95,13 +132,6 @@ export default function ScanPage() {
 						<p>No package scanned yet</p>
 					</div>
 				)}
-			</div>
-			<div className="absolute bottom-2 w-full">
-				<form onSubmit={handleSubmit}>
-					<Button className="w-full" disabled={isSubmitting || hbls.length === 0}>
-						{isSubmitting ? "Enviando..." : "Entregar"}
-					</Button>
-				</form>
 			</div>
 		</main>
 	);
