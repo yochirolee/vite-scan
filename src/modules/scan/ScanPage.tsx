@@ -22,7 +22,7 @@ export default function ScanPage() {
 		try {
 			const payload = {
 				hbls: hbls,
-				updatedAt: new Date().toLocaleDateString(),
+				updatedAt: new Date().toISOString(),
 				locationId: 7,
 				statusId: 8,
 			};
