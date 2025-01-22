@@ -37,7 +37,7 @@ export const tracking_api = {
 			return response.data;
 		},
 
-		fetchParcelsByContainerId: async (containerId: number): Promise<any[]> => {
+		fetchParcelsByContainerId: async (containerId: number) => {
 			const response = await axios.get(`${baseUrl}/containers/${containerId}/parcels`);
 			return response.data;
 		},

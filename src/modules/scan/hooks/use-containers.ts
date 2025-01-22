@@ -9,9 +9,10 @@ export const useFetchContainers = () => {
 };
 
 export const useFetchParcelsByContainerId = (containerId: number | null) => {
-	return useQuery<any[], Error>({
+	const { data, isLoading, isError } = useQuery({
 		queryKey: ["parcelsByContainerId", containerId],
 		queryFn: () => tracking_api.containers.fetchParcelsByContainerId(containerId!),
 		enabled: !!containerId,
 	});
+	return { data: data?.data, isLoading, isError };
 };
