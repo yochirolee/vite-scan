@@ -23,7 +23,7 @@ export default function MainPage() {
 				) : (
 					<>
 						<Input />
-						<DataTable columns={columns} data={parcels.data || []} />
+						<DataTable columns={columns} data={parcels?.data || []} />
 					</>
 				)
 			) : (
