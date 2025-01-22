@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 
 import { ContainerSelect } from "./components/container-select";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { NoContainerSelected } from "./components/no-container-select";
 import { useFetchParcelsByContainerId } from "./hooks/use-containers";
 import { Skeleton } from "@/components/ui/skeleton";
