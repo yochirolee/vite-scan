@@ -9,8 +9,12 @@ import { DataTable } from "./components/table/data-table";
 import { columns } from "./components/table/columns";
 
 export default function MainPage() {
-	const [selectedContainer, setSelectedContainer] = useState<any>(null);
-	const { data: parcels, isLoading, isError } = useFetchParcelsByContainerId(selectedContainer?.id);
+	const [selectedContainer, setSelectedContainer] = useState<{ id: number } | null>(null);
+	const {
+		data: parcels,
+		isLoading,
+		isError,
+	} = useFetchParcelsByContainerId(selectedContainer?.id ?? null);
 
 	return (
 		<div className="flex flex-col gap-2">
