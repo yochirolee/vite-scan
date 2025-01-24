@@ -11,13 +11,19 @@ import { Stats } from "./components/stats";
 export default function MainPage() {
 	const [selectedContainer, setSelectedContainer] = useState<{ id: number } | null>(null);
 	const { data, isLoading, isError } = useFetchParcelsByContainerId(selectedContainer?.id ?? null);
-	const [parcels, setParcels] = useState([]);
+	const [parcels, setParcels] = useState(() => {
+		// Initialize from localStorage if available
+		const saved = localStorage.getItem(`parcels-${selectedContainer?.id}`);
+		return saved ? JSON.parse(saved) : [];
+	});
 
 	useEffect(() => {
 		if (data) {
 			setParcels(data.data.map((item: any) => ({ ...item, scanned: false })));
 		}
 	}, [data]);
+
+	
 
 	const handleScan = (hbl: string) => {
 		setParcels((prevPackages: any) => {
@@ -36,9 +42,10 @@ export default function MainPage() {
 					return new Date(b.scannedAt).getTime() - new Date(a.scannedAt).getTime();
 				});
 			}
-            
+
 			return prevPackages;
 		});
+		localStorage.setItem(`parcels-${selectedContainer?.id}`, JSON.stringify(parcels));
 	};
 
 	return (
@@ -61,7 +68,7 @@ export default function MainPage() {
 			) : (
 				<NoContainerSelected />
 			)}
-			<Stats />
+			<Stats parcels={parcels || []} />
 		</div>
 	);
 }

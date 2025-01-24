@@ -16,7 +16,7 @@ export default function AppRouter() {
 						<Route path="/scan" element={<ScanPage />} />
 						<Route path="/main" element={<MainPage />} />
 
-						<Route path="*" element={<Navigate to="/scan" />} />
+						<Route path="*" element={<Navigate to="/main" />} />
 					</>
 				) : (
 					<Route path="/login" element={<LoginForm />} />
