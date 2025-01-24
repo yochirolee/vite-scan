@@ -1,22 +1,20 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { tracking_api } from "@/api/tracking-api";
 
 interface HBLScannerProps {
 	onScan: (value: string) => void;
 }
-type CreateEventMutation = {
+/* type CreateEventMutation = {
 	hbl: string;
 	locationId: number;
 	statusId: number;
 	updatedAt: string;
-};
+}; */
 export function HBLScanner({ onScan }: HBLScannerProps) {
 	const [scanValue, setScanValue] = useState("");
-	const queryClient = useQueryClient();
-
-	const eventMutation = useMutation({
+/* 	const queryClient = useQueryClient();
+ */
+/* 	const eventMutation = useMutation({
 		mutationFn: (values: CreateEventMutation) => tracking_api.events.create(values),
 		onSuccess: () => {
 			setScanValue("");
@@ -28,7 +26,7 @@ export function HBLScanner({ onScan }: HBLScannerProps) {
 		onError: (error) => {
 			console.error("Error creating Event:", error);
 		},
-	});
+	}); */
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
