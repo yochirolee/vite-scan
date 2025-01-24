@@ -46,7 +46,12 @@ export const tracking_api = {
 			return response.data;
 		},
 	},
-
+	events: {
+		create: async (values: any): Promise<any[]> => {
+			const response = await axios.post(`${baseUrl}/parcels/create-event`, values);
+			return response.data;
+		},
+	},
 	issues: {
 		getAll: async (): Promise<any[]> => {
 			const response = await axios.get(`${baseUrl}/issues`);
