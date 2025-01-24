@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Save, SaveAll, ScanBarcode } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tracking_api } from "@/api/tracking-api";
 
@@ -55,7 +53,6 @@ export function HBLScanner({ onScan }: HBLScannerProps) {
 				className="flex-1"
 				autoFocus
 			/>
-			
 		</form>
 	);
 }
