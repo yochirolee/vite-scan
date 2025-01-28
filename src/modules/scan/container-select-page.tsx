@@ -4,12 +4,11 @@ import { useFetchParcelsByContainerId } from "./hooks/use-containers";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Package, ShipWheel, Weight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ParcelsList } from "./components/parcels-list";
-import { Card, CardContent, CardTitle, CardHeader, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ContainerSelectPage() {
-	const [selectedContainer, setSelectedContainer] = useState<{ id: number } | null>(null);
+	const [selectedContainer, setSelectedContainer] = useState<any | null>(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
