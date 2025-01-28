@@ -5,19 +5,23 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { CheckCircle, CircleOff, EllipsisVerticalIcon } from "lucide-react";
 
 export function ParcelsList({ parcels }: { parcels: any[] }) {
+	//order by updatedAt
+	const sortedParcels = parcels.sort(
+		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+	);
 	// Create a ref for the scrolling container
 	const parentRef = useRef<HTMLDivElement>(null);
 
 	// Set up the virtualizer
 	const virtualizer = useVirtualizer({
-		count: parcels.length,
+		count: sortedParcels.length,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => 100, // Estimate height of each item in pixels
 		overscan: 5, // Number of items to render outside of the visible area
 	});
 
 	return (
-		<div ref={parentRef} className="h-[calc(100vh-300px)] overflow-auto px-2">
+		<div ref={parentRef} className="h-[calc(100vh-200px)] overflow-auto px-2">
 			{/* Create a div with the total size of all items */}
 			<div
 				style={{
@@ -33,26 +37,26 @@ export function ParcelsList({ parcels }: { parcels: any[] }) {
 							key={item.hbl}
 							style={{
 								position: "absolute",
-								top: 6,
+								
 								transform: `translateY(${virtualItem.start}px)`,
 								width: "100%",
 							}}
 						>
 							<Card
 								className={`
-									${item.scanned ? "bg-accent" : ""}
+									${item.scanned || item.status === "EN_ESPERA_DE_AFORO" ? "bg-gray-700/10 " : ""}
 									
-									flex flex-col w-full   rounded-lg border px-0 text-left text-sm transition-all
+									flex  flex-col w-full  px-2 rounded-lg border  text-left text-sm 
 								`}
 							>
-								<div className="flex flex-row gap-2 justify-between w-full">
+								<div className="flex flex-row gap-2  justify-between w-full">
 									<div className="">
-										<div className="flex gap-2 flex-col m-2">
+										<div className="flex gap-1 flex-col m-2">
 											<div className="font-semibold">
 												{item.hbl} - {item.invoiceId}
 											</div>
 											<div className="text-xs text-muted-foreground">{item.description}</div>
-											<div className="text-xs  text-sky-800">{item.agency} </div>
+											<div className="text-[10px]  text-sky-800">{item.agency} </div>
 										</div>
 									</div>
 
@@ -70,8 +74,8 @@ export function ParcelsList({ parcels }: { parcels: any[] }) {
 												</div>
 											)}
 											<div className="text-[11px] text-muted-foreground">
-												{item.scannedAt
-													? new Date(item.scannedAt).toLocaleDateString("en-US", {
+												{item.updatedAt
+													? new Date(item.updatedAt).toLocaleDateString("en-US", {
 															day: "numeric",
 															month: "short",
 															year: "numeric",
