@@ -21,7 +21,7 @@ export function ParcelsList({ parcels }: { parcels: any[] }) {
 	});
 
 	return (
-		<div ref={parentRef} className="h-[calc(100vh-200px)] overflow-auto px-2">
+		<div ref={parentRef} className="h-[calc(100vh-250px)] overflow-auto px-2">
 			{/* Create a div with the total size of all items */}
 			<div
 				style={{

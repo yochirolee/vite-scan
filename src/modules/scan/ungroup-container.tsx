@@ -59,14 +59,10 @@ export default function UngroupContainer() {
 	};
 
 	return (
-		<div className="flex flex-col relative gap-2 mt-2 p-1">
-			<div className="flex my-2 flex-col gap-2">
-				<HBLScanner handleScan={handleScan} />
-			</div>
-			{/* <DataTable columns={columns} data={filteredData || []} /> */}
-			<ParcelsList parcels={parcels || []} />
-
+		<div className="flex  flex-col space-y-2 relative gap-2 mt-2 p-1">
+			<HBLScanner handleScan={handleScan} />
 			<Stats parcels={parcels || []} />
+			<ParcelsList parcels={parcels || []} />
 		</div>
 	);
 }

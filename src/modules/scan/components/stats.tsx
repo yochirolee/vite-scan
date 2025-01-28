@@ -12,7 +12,7 @@ export const Stats = ({ parcels }: { parcels: any[] }) => {
 	}, [parcels]);
 
 	return (
-		<div className="absoluted  bottom-0">
+		<div className="mx-2">
 			<Card className="grid bg-muted h-16 gap-2 p-2 grid-cols-5">
 				<div className="bg-secondary rounded-lg text-center flex flex-col justify-center items-center">
 					<span className="text-xs text-muted-foreground">Total</span>
