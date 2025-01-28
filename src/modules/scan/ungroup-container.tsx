@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { HBLScanner } from "./components/hbl-scanner";
 import { ParcelsList } from "./components/parcels-list";
 import { Stats } from "./components/stats";
