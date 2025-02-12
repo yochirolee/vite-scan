@@ -1,5 +1,7 @@
 import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
+import { useSound } from "use-sound";
+import scanSound from "../../../public/success-beep.mp3";
 
 const constraints: MediaStreamConstraints = {
 	audio: false,
@@ -16,6 +18,7 @@ export const CameraScan = ({ onScan }: { onScan: (hbl: string) => void }) => {
 	const { devices } = useMediaDevices({
 		constraints,
 	});
+	const [play] = useSound(scanSound);
 
 	const deviceId = devices?.[0]?.deviceId;
 
@@ -23,6 +26,7 @@ export const CameraScan = ({ onScan }: { onScan: (hbl: string) => void }) => {
 		deviceId: deviceId,
 		onDecodeResult: (result) => {
 			onScan(result.getText());
+			play();
 		},
 		constraints,
 		timeBetweenDecodingAttempts: 300,
