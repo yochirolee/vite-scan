@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { CheckCircle, CircleOff, EllipsisVerticalIcon } from "lucide-react";
 
-export function ParcelsList({ parcels }: { parcels: any[] }) {
+export function ParcelsList({ parcels  }: { parcels: any[] }) {
 	//order by updatedAt
 	const sortedParcels = parcels.sort(
 		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),

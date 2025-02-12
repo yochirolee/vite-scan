@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 /* import { tracking_api } from "@/api/tracking-api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -24,14 +25,21 @@ export function HBLScanner({ handleScan }: HBLScannerProps) {
 		},
 	}) */ const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log(scanValue);
+		const hblNumber = scanValue.startsWith("CTE") ? scanValue : scanValue.split(",")[1];
+		if (!hblNumber) {
+			toast.error("Invalid scan value - no HBL number found");
+			setScanValue("");
+			return;
+		}
+		// Update scanValue to just use the HBL number
+		setScanValue(hblNumber);
 		/* eventMutation.mutate({
 			hbl: scanValue.trim(),
 			locationId: 5,
 			statusId: 5,
 			updatedAt: new Date().toISOString(),
 		}); */
-		handleScan(scanValue.trim());
+		handleScan(hblNumber.trim());
 		setScanValue(""); // Clear input after scan
 	};
 

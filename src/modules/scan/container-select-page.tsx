@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { ContainerSelect } from "./components/container-select";
-import { useFetchParcelsByContainerId } from "./hooks/use-containers";
+import {
+	useFetchParcelsByContainerId,
+	useGetParcelsByContainerToUngroup,
+} from "./hooks/use-containers";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Package, ShipWheel, Weight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -23,10 +26,8 @@ export function ContainerSelectPage() {
 		}
 	}, [selectedContainer, navigate]);
 
-	console.log(selectedContainer);
+	const { data, isLoading, isError } = useGetParcelsByContainerToUngroup(selectedContainer?.id);
 
-	const { data, isLoading, isError } = useFetchParcelsByContainerId(selectedContainer?.id);
-	console.log(data);
 	const handleStartUngroup = () => {
 		//save the container id and data in the local storage
 		localStorage.setItem(

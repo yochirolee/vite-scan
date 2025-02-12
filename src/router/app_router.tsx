@@ -1,8 +1,10 @@
 import { useAuthContext } from "@/context/auth-context";
 import { LoginForm } from "@/modules/auth/login-form";
+import { Carriers } from "@/modules/carriers/carriers";
 import { ContainerSelectPage } from "@/modules/scan/container-select-page";
 import MainPage from "@/modules/scan/main-page";
 import ScanPage from "@/modules/scan/ScanPage";
+import Ungroup from "@/modules/scan/ungroup";
 import UngroupContainer from "@/modules/scan/ungroup-container";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -14,10 +16,11 @@ export default function AppRouter() {
 			{user ? (
 				<>
 					<Route path="/scan" element={<ScanPage />} />
-					<Route path="/container_select" element={<ContainerSelectPage />} />
+					<Route path="/select" element={<ContainerSelectPage />} />
 					<Route path="/ungroup/:id" element={<UngroupContainer />} />
 					<Route path="/main" element={<MainPage />} />
-
+					<Route path="/new-ungroup/:id" element={<Ungroup />} />
+					<Route path="/carriers" element={<Carriers />} />
 					<Route path="*" element={<Navigate to="/main" />} />
 				</>
 			) : (

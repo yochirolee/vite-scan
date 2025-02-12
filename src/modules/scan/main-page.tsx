@@ -6,7 +6,7 @@ const actions = [
 	{
 		name: "Desagrupar",
 		icon: <Package />,
-		link: "/container_select",
+		link: "/select",
 		action: {
 			name: "ungroup",
 			status: "pending",

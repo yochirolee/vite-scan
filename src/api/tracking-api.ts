@@ -1,8 +1,8 @@
 import axios from "axios";
 const baseUrl =
 	process.env.NODE_ENV === "production"
-		? "https://apiv1trackingctenvioscom.vercel.app/api"
-		: "http://localhost:3001/api";
+		? "https://apiv1trackingctenvioscom.vercel.app/api/v1"
+		: "http://localhost:3001/api/v1";
 
 export const tracking_api = {
 	/* parcels: {
@@ -34,6 +34,10 @@ export const tracking_api = {
 	containers: {
 		fetchContainers: async (): Promise<any[]> => {
 			const response = await axios.get(`${baseUrl}/containers`);
+			return response.data;
+		},
+		getParcelsByContainerToUngroup: async (containerId: number) => {
+			const response = await axios.get(`${baseUrl}/containers/${containerId}`);
 			return response.data;
 		},
 
