@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
 
