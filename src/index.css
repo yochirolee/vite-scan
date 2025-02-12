@@ -146,16 +146,4 @@
 	body {
 		@apply bg-background text-foreground;
 	}
-	@keyframes scan {
-		0% {
-			transform: translateY(-128px);
-		}
-		100% {
-			transform: translateY(128px);
-		}
-	}
-
-	.animate-scan {
-		animation: scan 2s linear infinite;
-	}
 }
