@@ -3,7 +3,7 @@ import { CameraScan } from "./components/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { ParcelsList } from "./scan/components/parcels-list";
+
 export const ScanXzing = () => {
 	const [cameraMode, setCameraMode] = useState(false);
 	const [hbls, setHbls] = useState<string[]>([]);
