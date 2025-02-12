@@ -12,7 +12,8 @@ export const ScanXzing = () => {
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
 		// Format the HBL number to uppercase and remove any whitespace
 		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
-		setHbls((prev) => [...prev, formattedHbl]);
+		// Only add if the HBL is not already in the array
+		setHbls((prev) => (prev.includes(formattedHbl) ? prev : [...prev, formattedHbl]));
 	};
 	const handleScan = (hbl: string) => {
 		formatHbl(hbl);
