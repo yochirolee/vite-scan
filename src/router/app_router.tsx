@@ -1,5 +1,6 @@
 import { useAuthContext } from "@/context/auth-context";
 import { LoginForm } from "@/modules/auth/login-form";
+import { ScanXzing } from "@/modules/scan-xzing";
 import { ContainerSelectPage } from "@/modules/scan/container-select-page";
 import MainPage from "@/modules/scan/main-page";
 import ScanPage from "@/modules/scan/ScanPage";
@@ -19,6 +20,7 @@ export default function AppRouter() {
 					<Route path="/ungroup/:id" element={<UngroupContainer />} />
 					<Route path="/main" element={<MainPage />} />
 					<Route path="/new-ungroup/:id" element={<Ungroup />} />
+					<Route path="/scan-xzing" element={<ScanXzing />} />
 					<Route path="*" element={<Navigate to="/main" />} />
 				</>
 			) : (
