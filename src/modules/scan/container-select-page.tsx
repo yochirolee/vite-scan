@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { ContainerSelect } from "./components/container-select";
-import {
-	useFetchParcelsByContainerId,
-	useGetParcelsByContainerToUngroup,
-} from "./hooks/use-containers";
+import { useGetParcelsByContainerToUngroup } from "./hooks/use-containers";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Package, ShipWheel, Weight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +32,7 @@ export function ContainerSelectPage() {
 			JSON.stringify({
 				action: "ungroup",
 				containerId: selectedContainer?.id,
-				parcels: data?.data,
+				parcels: data,
 				isDone: false,
 			}),
 		);

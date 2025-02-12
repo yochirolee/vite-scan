@@ -1,6 +1,5 @@
 import { useAuthContext } from "@/context/auth-context";
 import { LoginForm } from "@/modules/auth/login-form";
-import { Carriers } from "@/modules/carriers/carriers";
 import { ContainerSelectPage } from "@/modules/scan/container-select-page";
 import MainPage from "@/modules/scan/main-page";
 import ScanPage from "@/modules/scan/ScanPage";
@@ -20,7 +19,6 @@ export default function AppRouter() {
 					<Route path="/ungroup/:id" element={<UngroupContainer />} />
 					<Route path="/main" element={<MainPage />} />
 					<Route path="/new-ungroup/:id" element={<Ungroup />} />
-					<Route path="/carriers" element={<Carriers />} />
 					<Route path="*" element={<Navigate to="/main" />} />
 				</>
 			) : (
