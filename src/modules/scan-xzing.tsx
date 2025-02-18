@@ -1,42 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CameraScan } from "./components/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useUpsertShipment } from "./useShipments";
+
 import { useParams } from "react-router-dom";
 import { CameraIcon, ChevronRight, Loader2, Save } from "lucide-react";
 import { statuses } from "@/data/data";
 import { Button } from "@/components/ui/button";
-import { useGetScannedShipments } from "./scan/hooks/use-shipments";
-import { baseUrl, ShipmentInterface } from "@/api/api";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { baseUrl } from "@/api/api";
+import { Card } from "@/components/ui/card";
 import axios from "axios";
-import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
-const formSchema = z.object({
+/* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
 	timestamp: z.string(),
-});
+}); */
 
-type FormSchema = z.infer<typeof formSchema>;
-
+/* type FormSchema = z.infer<typeof formSchema>;
+ */
 export const ScanXzing = () => {
 	const [cameraMode, setCameraMode] = useState(false);
 	const { id } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
-	const [scanned, setScanned] = useState<string[]>([]);
-	const [shipments, setShipments] = useState<ShipmentInterface[]>([]);
+	const [shipments, setShipments] = useState<any[]>([]);
 
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
 
 	console.log(shipments); */
 
-	const form = useForm<FormSchema>({
+	/* const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			hbls: [],
@@ -44,16 +37,7 @@ export const ScanXzing = () => {
 			timestamp: undefined,
 		},
 	});
-
-	const upsertMutation = useUpsertShipment();
-	const { handleSubmit } = form;
-	const handleSubmitForm = (data: FormSchema) => {
-		/* data.hbls.push(...hbls);
-		data.timestamp = new Date().toISOString();
-		console.log(data);
-		upsertMutation.mutate([data]); */
-	};
-
+ */
 	const handleScan = async (value: string) => {
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
 		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
@@ -78,7 +62,7 @@ export const ScanXzing = () => {
 		});
 
 		if (response.status === 200) {
-			const newShipments = response.data.map((shipment: ShipmentInterface) => {
+			const newShipments = response.data.map((shipment: any) => {
 				if (shipment.hbl == formattedHbl) {
 					return { ...shipment, timestamp: new Date().toISOString() };
 				}
@@ -86,11 +70,10 @@ export const ScanXzing = () => {
 			});
 			setShipments((prev) => [...prev, ...newShipments]);
 		} else {
-			toast.error("Error al escanear el HBL");
+			console.log(response.data, "response");
 		}
 		setIsLoading(false);
-	};
-	console.log(scanned, "scanned");
+
 	return (
 		<div className="relative flex flex-col h-dvh">
 			<div className="sticky top-0 space-y-2">
@@ -143,7 +126,7 @@ export const ScanXzing = () => {
 			</ScrollArea>
 
 			<div className="sticky bottom-0 p-4 bg-background border-t">
-				<Button className="w-full" variant="outline" onClick={handleSubmitForm}>
+				<Button className="w-full" variant="outline" onClick={}>
 					<Save className="w-4 h-4 mr-2" />
 					Save
 				</Button>

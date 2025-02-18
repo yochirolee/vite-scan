@@ -1,7 +1,7 @@
 import { User } from "@/types/user";
 import axios from "axios";
 
-export interface ShipmentInterface {
+export interface ShipmentsInterface {
 	hbls: string[];
 	statusId: number;
 	timestamp: string;
@@ -72,7 +72,7 @@ const api = {
 			const response = await axiosInstance.get("/shipments/search", { params });
 			return response.data;
 		},
-		upsert: async (shipment: ShipmentInterface) => {
+		upsert: async (shipment: ShipmentsInterface) => {
 			console.log(shipment, "on API");
 			const response = await axiosInstance.post("/shipments/upsert", shipment);
 			return response.data;
