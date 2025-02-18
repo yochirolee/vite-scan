@@ -20,7 +20,7 @@ export default function AppRouter() {
 					<Route path="/ungroup/:id" element={<UngroupContainer />} />
 					<Route path="/main" element={<MainPage />} />
 					<Route path="/new-ungroup/:id" element={<Ungroup />} />
-					<Route path="/scan-xzing" element={<ScanXzing />} />
+					<Route path="/scan/:id" element={<ScanXzing />} />
 					<Route path="*" element={<Navigate to="/main" />} />
 				</>
 			) : (

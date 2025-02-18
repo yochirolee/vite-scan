@@ -1,6 +1,11 @@
 import { User } from "@/types/user";
 import axios from "axios";
 
+export interface ShipmentInterface {
+	hbls: string[];
+	statusId: number;
+	timestamp: string;
+}
 const baseUrl =
 	process.env.NODE_ENV === "production"
 		? "https://apiv1trackingctenvioscom.vercel.app/api/v1"
@@ -65,6 +70,15 @@ const api = {
 		},
 		search: async (params: { query: string }) => {
 			const response = await axiosInstance.get("/shipments/search", { params });
+			return response.data;
+		},
+		upsert: async (shipment: ShipmentInterface) => {
+			console.log(shipment, "on API");
+			const response = await axiosInstance.post("/shipments/upsert", shipment);
+			return response.data;
+		},
+		scan: async (hbl: string) => {
+			const response = await axiosInstance.get(`/shipments/scan/${hbl}`);
 			return response.data;
 		},
 	},
