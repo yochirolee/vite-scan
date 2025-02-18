@@ -74,94 +74,98 @@ export const ScanXzing = () => {
 		}
 		setIsLoading(false);
 
-	return (
-		<div className="relative flex flex-col h-dvh">
-			<div className="sticky top-0 space-y-2">
-				<div className="flex items-center justify-between">
-					<div className="flex items-center gap-2">
-						<h1 className=" font-bold">
-							{statuses.find((status) => status.id === parseInt(id || "0"))?.name}
-						</h1>
+		return (
+			<div className="relative flex flex-col h-dvh">
+				<div className="sticky top-0 space-y-2">
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<h1 className=" font-bold">
+								{statuses.find((status) => status.id === parseInt(id || "0"))?.name}
+							</h1>
+						</div>
+						<div className="flex items-center justify-end mx-2 space-x-2">
+							<CameraIcon className={cameraMode ? "w-4 h-4" : "w-4 h-4 text-gray-400"} />
+							<Switch id="camera-mode" checked={cameraMode} onCheckedChange={setCameraMode} />
+						</div>
 					</div>
-					<div className="flex items-center justify-end mx-2 space-x-2">
-						<CameraIcon className={cameraMode ? "w-4 h-4" : "w-4 h-4 text-gray-400"} />
-						<Switch id="camera-mode" checked={cameraMode} onCheckedChange={setCameraMode} />
-					</div>
+					{cameraMode ? <CameraScan onScan={handleScan} /> : <HblScanner handleScan={handleScan} />}
+					{isLoading && (
+						<div className="absolute inset-0 flex items-center justify-center">
+							<Loader2 className="w-4 h-4 animate-spin" />
+						</div>
+					)}
 				</div>
-				{cameraMode ? <CameraScan onScan={handleScan} /> : <HblScanner handleScan={handleScan} />}
-				{isLoading && (
-					<div className="absolute inset-0 flex items-center justify-center">
-						<Loader2 className="w-4 h-4 animate-spin" />
-					</div>
-				)}
-			</div>
 
-			<ScrollArea className=" flex flex-col m-2  space-y-1  flex-1 min-h-0 h-full">
-				{shipments?.map((shipment) => (
-					<Card className="flex items-center my-2 justify-between text-xs p-2" key={shipment?.hbl}>
-						<div className="flex flex-col gap-2">
-							<div>
-								<span>{shipment?.hbl} </span>
-								{shipment?.invoiceId}
-							</div>
-
-							<div>{shipment?.agency}</div>
-							<div>{shipment?.description}</div>
-						</div>
-						<div className="flex items-center gap-1">
-							<div className="flex flex-col gap-2 justify-end">
-								<div className="text-xs text-gray-500">
-									{shipment?.state}/{shipment?.city}
+				<ScrollArea className=" flex flex-col m-2  space-y-1  flex-1 min-h-0 h-full">
+					{shipments?.map((shipment) => (
+						<Card
+							className="flex items-center my-2 justify-between text-xs p-2"
+							key={shipment?.hbl}
+						>
+							<div className="flex flex-col gap-2">
+								<div>
+									<span>{shipment?.hbl} </span>
+									{shipment?.invoiceId}
 								</div>
-								<div className="text-xs">
-									{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
-								</div>
+
+								<div>{shipment?.agency}</div>
+								<div>{shipment?.description}</div>
 							</div>
-							<Button variant="ghost" size="icon">
-								<ChevronRight className="w-4 h-4" />
-							</Button>
-						</div>
-					</Card>
-				))}
-			</ScrollArea>
+							<div className="flex items-center gap-1">
+								<div className="flex flex-col gap-2 justify-end">
+									<div className="text-xs text-gray-500">
+										{shipment?.state}/{shipment?.city}
+									</div>
+									<div className="text-xs">
+										{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
+									</div>
+								</div>
+								<Button variant="ghost" size="icon">
+									<ChevronRight className="w-4 h-4" />
+								</Button>
+							</div>
+						</Card>
+					))}
+				</ScrollArea>
 
-			<div className="sticky bottom-0 p-4 bg-background border-t">
-				<Button className="w-full" variant="outline" onClick={}>
-					<Save className="w-4 h-4 mr-2" />
-					Save
-				</Button>
+				<div className="sticky bottom-0 p-4 bg-background border-t">
+					<Button className="w-full" variant="outline" onClick={}>
+						<Save className="w-4 h-4 mr-2" />
+						Save
+					</Button>
+				</div>
 			</div>
-		</div>
-	);
-};
-
-const HblScanner = ({ handleScan }: { handleScan: (hbl: string) => void }) => {
-	const [scanValue, setScanValue] = useState("");
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		handleScan(scanValue);
-		setScanValue("");
+		);
 	};
-	return (
-		<form onSubmit={handleSubmit} className="flex gap-2 px-2">
-			<Input
-				placeholder="Escanear HBL..."
-				value={scanValue}
-				onChange={(e) => setScanValue(e.target.value)}
-				className="flex-1"
-				autoFocus
-			/>
-		</form>
-	);
-};
 
-const formatDate = (dateString: string): string => {
-	const date = new Date(dateString);
-	const day = date.getDate().toString().padStart(2, "0");
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const year = date.getFullYear();
-	const hours = date.getHours().toString().padStart(2, "0");
-	const minutes = date.getMinutes().toString().padStart(2, "0");
+	const HblScanner = ({ handleScan }: { handleScan: (hbl: string) => void }) => {
+		const [scanValue, setScanValue] = useState("");
+		const handleSubmit = (e: React.FormEvent) => {
+			e.preventDefault();
+			handleScan(scanValue);
+			setScanValue("");
+		};
+		return (
+			<form onSubmit={handleSubmit} className="flex gap-2 px-2">
+				<Input
+					placeholder="Escanear HBL..."
+					value={scanValue}
+					onChange={(e) => setScanValue(e.target.value)}
+					className="flex-1"
+					autoFocus
+				/>
+			</form>
+		);
+	};
 
-	return `${day}/${month}/${year} ${hours}:${minutes}`;
+	const formatDate = (dateString: string): string => {
+		const date = new Date(dateString);
+		const day = date.getDate().toString().padStart(2, "0");
+		const month = (date.getMonth() + 1).toString().padStart(2, "0");
+		const year = date.getFullYear();
+		const hours = date.getHours().toString().padStart(2, "0");
+		const minutes = date.getMinutes().toString().padStart(2, "0");
+
+		return `${day}/${month}/${year} ${hours}:${minutes}`;
+	};
 };
