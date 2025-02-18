@@ -1,7 +1,7 @@
 import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
 import { useSound } from "use-sound";
-import scanSound from "../../../public/success-beep.mp3";
+import scanSound from "../../success-beep.mp3";
 
 const constraints: MediaStreamConstraints = {
 	audio: false,
