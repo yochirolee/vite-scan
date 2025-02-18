@@ -24,6 +24,10 @@ import { Stats } from "./scan/components/stats";
 interface Shipment {
 	hbl: string;
 	timestamp?: string;
+	scanned?: boolean;
+	invoiceId?: string;
+	agency?: string;
+	description?: string;
 	// ... other shipment properties
 }
 
