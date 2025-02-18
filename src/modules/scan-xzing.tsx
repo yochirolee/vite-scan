@@ -11,6 +11,7 @@ import { baseUrl } from "@/api/api";
 import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Stats } from "./scan/components/stats";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -19,11 +20,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 /* type FormSchema = z.infer<typeof formSchema>;
  */
+
+interface Shipment {
+	hbl: string;
+	timestamp?: string;
+	// ... other shipment properties
+}
+
 export const ScanXzing = () => {
 	const [cameraMode, setCameraMode] = useState(false);
 	const { id } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
-	const [shipments, setShipments] = useState<any[]>([]);
+	const [shipments, setShipments] = useState<Shipment[]>([]);
 
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
 
@@ -38,75 +46,81 @@ export const ScanXzing = () => {
 		},
 	});
  */
-	const handleScan = async (value: string) => {
+	const handleScan = async (value: string): Promise<void> => {
 		setIsLoading(true);
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
 		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
 
 		// Check if shipment already exists and update timestamp
 		const existingShipmentIndex = shipments.findIndex((shipment) => shipment.hbl === formattedHbl);
+
 		if (existingShipmentIndex !== -1) {
 			const updatedShipments = [...shipments];
 			updatedShipments[existingShipmentIndex] = {
 				...shipments[existingShipmentIndex],
 				timestamp: new Date().toISOString(),
+				scanned: true,
 			};
-			updatedShipments.sort(
-				(a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-			);
-			setShipments(updatedShipments);
+			setShipments(sortShipmentsByTimestamp(updatedShipments));
 			setIsLoading(false);
 			return;
 		}
 
 		const token = localStorage.getItem("token");
-		const response = await axios.get(`${baseUrl}/shipments/scan/${formattedHbl}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
+		const response = await axios.get<Shipment[]>(`${baseUrl}/shipments/scan/${formattedHbl}`, {
+			headers: { Authorization: `Bearer ${token}` },
 		});
 
-		if (response.status === 200) {
-			const newShipments = response.data.map((shipment: any) => {
-				if (shipment.hbl == formattedHbl) {
-					return { ...shipment, timestamp: new Date().toISOString() };
-				}
-				return shipment;
-			});
-			setShipments((prev) => [...prev, ...newShipments]);
-		} else {
-			console.log(response.data, "response");
-		}
+		const newShipments = response.data.map((shipment) =>
+			shipment.hbl === formattedHbl
+				? { ...shipment, timestamp: new Date().toISOString(), scanned: true }
+				: shipment,
+		);
+
+		setShipments((prev) => sortShipmentsByTimestamp([...prev, ...newShipments]));
 		setIsLoading(false);
 	};
 
+	const sortShipmentsByTimestamp = (shipments: Shipment[]): Shipment[] => {
+		return [...shipments].sort((a, b) => {
+			const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+			const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+			return timeB - timeA;
+		});
+	};
+
 	return (
-		<div className="relative flex flex-col h-dvh">
-			<div className="sticky top-0 space-y-2">
+		<div className="relative px-4 flex flex-col h-dvh">
+			<div className="sticky  top-0 space-y-2">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-2">
 						<h1 className=" font-bold">
 							{statuses.find((status) => status.id === parseInt(id || "0"))?.name}
 						</h1>
 					</div>
-					<div className="flex items-center justify-end mx-2 space-x-2">
+					<div className="flex items-center justify-end  space-x-2">
 						<CameraIcon className={cameraMode ? "w-4 h-4" : "w-4 h-4 text-gray-400"} />
 						<Switch id="camera-mode" checked={cameraMode} onCheckedChange={setCameraMode} />
 					</div>
 				</div>
-				{cameraMode ? <CameraScan onScan={handleScan} /> : <HblScanner handleScan={handleScan} />}
+				{cameraMode ? (
+					<CameraScan isLoading={isLoading} onScan={handleScan} />
+				) : (
+					<HblScanner handleScan={handleScan} />
+				)}
 				{isLoading && (
 					<div className="absolute inset-0 flex items-center justify-center">
 						<Loader2 className="w-4 h-4 animate-spin" />
 					</div>
 				)}
+				<Stats parcels={shipments || []} />
 			</div>
 
-			<ScrollArea className="flex flex-col m-2 space-y-1 flex-1 min-h-0 h-full">
+			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
 				{shipments?.map((shipment, index) => (
 					<Card
-						className={`flex items-center my-2 justify-between text-xs p-2 ${
-							shipment?.timestamp ? "bg-green-700/65" : ""
+						className={`flex items-center m-2 justify-between text-xs p-2 ${
+							shipment?.timestamp ? "bg-green-500/30" : "bg-muted/20 text-muted-foreground"
 						}`}
 						key={index}
 					>
@@ -121,10 +135,10 @@ export const ScanXzing = () => {
 						</div>
 						<div className="flex items-center gap-1">
 							<div className="flex flex-col gap-2 justify-end">
-								<div className="text-xs text-gray-500">
+								{/* <div className="text-xs text-gray-500">
 									{shipment?.state}/{shipment?.city}
-								</div>
-								<div className="text-xs">
+								</div> */}
+								<div className="text-xs justify-end text-green-600">
 									{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
 								</div>
 							</div>
@@ -154,7 +168,7 @@ const HblScanner = ({ handleScan }: { handleScan: (hbl: string) => void }) => {
 		setScanValue("");
 	};
 	return (
-		<form onSubmit={handleSubmit} className="flex gap-2 px-2">
+		<form onSubmit={handleSubmit} className="flex gap-2 ">
 			<Input
 				placeholder="Escanear HBL..."
 				value={scanValue}

@@ -14,7 +14,13 @@ const constraints: MediaStreamConstraints = {
 	},
 };
 
-export const CameraScan = ({ onScan }: { onScan: (hbl: string) => void }) => {
+export const CameraScan = ({
+	onScan,
+	isLoading,
+}: {
+	onScan: (hbl: string) => void;
+	isLoading: boolean;
+}): JSX.Element => {
 	const { devices } = useMediaDevices({
 		constraints,
 	});
@@ -25,8 +31,10 @@ export const CameraScan = ({ onScan }: { onScan: (hbl: string) => void }) => {
 	const { ref } = useZxing({
 		deviceId: deviceId,
 		onDecodeResult: (result) => {
-			onScan(result.getText());
-			play();
+			if (!isLoading) {
+				onScan(result.getText());
+				play();
+			}
 		},
 		constraints,
 		timeBetweenDecodingAttempts: 300,
