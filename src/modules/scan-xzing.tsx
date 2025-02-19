@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Stats } from "./scan/components/stats";
+import { toast } from "sonner";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -54,6 +55,7 @@ export const ScanXzing = () => {
 		setIsLoading(true);
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
 		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
+		toast("HBL escaneado correctamente");
 
 		// Check if shipment already exists and update timestamp
 		const existingShipmentIndex = shipments.findIndex((shipment) => shipment.hbl === formattedHbl);
@@ -71,18 +73,32 @@ export const ScanXzing = () => {
 		}
 
 		const token = localStorage.getItem("token");
-		const response = await axios.get<Shipment[]>(`${baseUrl}/shipments/scan/${formattedHbl}`, {
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		try {
+			const response = await axios.get<Shipment[]>(`${baseUrl}/shipments/scan/${formattedHbl}`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			console.log(response.data);
 
-		const newShipments = response.data.map((shipment) =>
-			shipment.hbl === formattedHbl
-				? { ...shipment, timestamp: new Date().toISOString(), scanned: true }
-				: shipment,
-		);
+			//if error, show toast
+			if (response.status !== 200) {
+				toast.error("Error al escanear el HBL");
+				setIsLoading(false);
+				return;
+			}
 
-		setShipments((prev) => sortShipmentsByTimestamp([...prev, ...newShipments]));
-		setIsLoading(false);
+			const newShipments = response.data.map((shipment) =>
+				shipment.hbl === formattedHbl
+					? { ...shipment, timestamp: new Date().toISOString(), scanned: true }
+					: shipment,
+			);
+
+			setShipments((prev) => sortShipmentsByTimestamp([...prev, ...newShipments]));
+			setIsLoading(false);
+		} catch (error) {
+			console.log(error);
+			toast.error("Error al escanear el HBL");
+			setIsLoading(false);
+		}
 	};
 
 	const sortShipmentsByTimestamp = (shipments: Shipment[]): Shipment[] => {
@@ -119,7 +135,20 @@ export const ScanXzing = () => {
 				)}
 				<Stats parcels={shipments || []} />
 			</div>
-
+			<Button
+				variant="outline"
+				onClick={() =>
+					toast("Event has been created", {
+						description: "Sunday, December 03, 2023 at 9:00 AM",
+						action: {
+							label: "Undo",
+							onClick: () => console.log("Undo"),
+						},
+					})
+				}
+			>
+				Show Toast
+			</Button>
 			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
 				{shipments?.map((shipment, index) => (
 					<Card

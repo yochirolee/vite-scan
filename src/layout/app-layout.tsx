@@ -6,22 +6,26 @@ import { LogOut } from "lucide-react";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { user, logout } = useAuthContext();
 	return (
-		<div className="max-h-screen relative">
-			<nav className="flex justify-between h-12 border-b  items-center ">
-				{user && <h1 className="text-sm pl-2">{user.username}</h1>}
-				<div className="inline-flex items-center ">
-					{user && (
-						<>
-							<ModeToggle />
-							<Button size="icon" variant="ghost" onClick={() => logout()}>
-								<LogOut />
-							</Button>
-						</>
-					)}
+		<div className="min-h-screen bg-background">
+			<nav className="  z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<div className="flex justify-between items-center h-12">
+					<div className="flex items-center gap-2">
+						<span className="text-xs text-muted-foreground">Salida Almacen</span>
+					</div>
+					<div className="inline-flex items-center ">
+						{user && (
+							<>
+								<ModeToggle />
+								<Button size="icon" variant="ghost" onClick={() => logout()}>
+									<LogOut />
+								</Button>
+							</>
+						)}
+					</div>
 				</div>
 			</nav>
 
-			<div className="h-full mt-2">{children}</div>
+			<div className="container py-6 relative">{children}</div>
 		</div>
 	);
 }
