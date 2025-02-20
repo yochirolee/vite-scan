@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Geolocation, Position } from "@capacitor/geolocation";
 import axios from "axios";
 import { Badge } from "@/components/ui/badge";
