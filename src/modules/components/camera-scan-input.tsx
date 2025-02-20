@@ -1,49 +1,51 @@
-import { useZxing } from "react-zxing";
-import { useMediaDevices } from "react-media-devices";
+import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
+import { useEffect, useState } from "react";
 import { useSound } from "use-sound";
 import scanSound from "../../success-beep.mp3";
 
-const constraints: MediaStreamConstraints = {
-	audio: false,
-	video: {
-		facingMode: "environment",
-		width: { ideal: 1280 },
-		height: { ideal: 720 },
-		aspectRatio: { ideal: 1.777777778 },
-		frameRate: { ideal: 30 },
-	},
-};
-
-export const CameraScan = ({
-	onScan,
-	isLoading,
-}: {
+interface CameraScanProps {
 	onScan: (hbl: string) => void;
 	isLoading: boolean;
-}): JSX.Element => {
-	const { devices } = useMediaDevices({
-		constraints,
-	});
+}
+
+export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element => {
 	const [play] = useSound(scanSound);
+	const [isScanning, setIsScanning] = useState<boolean>(false);
 
-	const deviceId = devices?.[0]?.deviceId;
+	useEffect(() => {
+		const startScan = async (): Promise<void> => {
+			// Check camera permission
+			const status = await BarcodeScanner.checkPermission({ force: true });
 
-	const { ref } = useZxing({
-		deviceId: deviceId,
-		onDecodeResult: (result) => {
-			if (!isLoading) {
-				onScan(result.getText());
-				play();
+			if (status.granted) {
+				// Make background transparent
+				document.querySelector("body")?.classList.add("scanner-active");
+
+				// Start scanning
+				setIsScanning(true);
+				const result = await BarcodeScanner.startScan();
+
+				if (result.hasContent && !isLoading) {
+					onScan(result.content);
+					play();
+				}
 			}
-		},
-		constraints,
-		timeBetweenDecodingAttempts: 300,
-	});
+		};
+
+		startScan();
+
+		return () => {
+			// Cleanup when component unmounts
+			BarcodeScanner.stopScan();
+			document.querySelector("body")?.classList.remove("scanner-active");
+			setIsScanning(false);
+		};
+	}, [onScan, isLoading, play]);
 
 	return (
 		<div>
 			<div className="flex h-[33vh] flex-col gap-4">
-				<video ref={ref} className="w-full h-full object-cover" autoPlay playsInline />
+				{isScanning && <div className="w-full h-full scanner-view" />}
 			</div>
 		</div>
 	);
