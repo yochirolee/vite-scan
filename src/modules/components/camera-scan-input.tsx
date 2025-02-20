@@ -10,21 +10,17 @@ interface CameraScanProps {
 
 export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element => {
 	const [play] = useSound(scanSound);
-	const [isScanning, setIsScanning] = useState<boolean>(false);
+	const [isScanning, setIsScanning] = useState(false);
 
 	useEffect(() => {
-		const startScan = async (): Promise<void> => {
-			// Check camera permission
+		const startScan = async () => {
 			const status = await BarcodeScanner.checkPermission({ force: true });
 
 			if (status.granted) {
-				// Make background transparent
-				document.querySelector("body")?.classList.add("scanner-active");
-
-				// Start scanning
+				document.querySelector(".scan-area")?.classList.add("scanner-active");
 				setIsScanning(true);
-				const result = await BarcodeScanner.startScan();
 
+				const result = await BarcodeScanner.startScan();
 				if (result.hasContent && !isLoading) {
 					onScan(result.content);
 					play();
@@ -35,17 +31,16 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 		startScan();
 
 		return () => {
-			// Cleanup when component unmounts
 			BarcodeScanner.stopScan();
-			document.querySelector("body")?.classList.remove("scanner-active");
+			document.querySelector(".scan-area")?.classList.remove("scanner-active");
 			setIsScanning(false);
 		};
 	}, [onScan, isLoading, play]);
 
 	return (
-		<div>
-			<div className="flex h-[33vh] flex-col gap-4">
-				{isScanning && <div className="w-full h-full scanner-view" />}
+		<div className="flex flex-col items-center justify-center p-4">
+			<div className="scan-area w-full max-w-md h-64 rounded-lg overflow-hidden">
+				{isScanning && <div className="w-20 h-20 bg-red-500" />}
 			</div>
 		</div>
 	);
