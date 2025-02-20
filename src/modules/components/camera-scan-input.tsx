@@ -1,7 +1,8 @@
-import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
-import { useEffect, useState } from "react";
+import { useZxing } from "react-zxing";
 import { useSound } from "use-sound";
 import scanSound from "../../success-beep.mp3";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface CameraScanProps {
 	onScan: (hbl: string) => void;
@@ -10,37 +11,63 @@ interface CameraScanProps {
 
 export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element => {
 	const [play] = useSound(scanSound);
-	const [isScanning, setIsScanning] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 
-	useEffect(() => {
-		const startScan = async () => {
-			const status = await BarcodeScanner.checkPermission({ force: true });
-
-			if (status.granted) {
-				document.querySelector(".scan-area")?.classList.add("scanner-active");
-				setIsScanning(true);
-
-				const result = await BarcodeScanner.startScan();
-				if (result.hasContent && !isLoading) {
-					onScan(result.content);
-					play();
-				}
+	const { ref } = useZxing({
+		onDecodeResult: (result) => {
+			if (!isLoading) {
+				setIsSuccess(true);
+				onScan(result.getText());
+				play();
+				setTimeout(() => setIsSuccess(false), 1000);
 			}
-		};
-
-		startScan();
-
-		return () => {
-			BarcodeScanner.stopScan();
-			document.querySelector(".scan-area")?.classList.remove("scanner-active");
-			setIsScanning(false);
-		};
-	}, [onScan, isLoading, play]);
+		},
+		constraints: {
+			video: {
+				facingMode: "environment",
+				width: { ideal: window.innerWidth },
+				height: { ideal: window.innerHeight / 3 },
+			},
+		},
+	});
 
 	return (
-		<div className="flex flex-col items-center justify-center p-4">
-			<div className="scan-area w-full max-w-md h-64 rounded-lg overflow-hidden">
-				{isScanning && <div className="w-20 h-20 bg-red-500" />}
+		<div className="h-[33vh] relative overflow-hidden bg-black/90">
+			<video ref={ref} className="w-full h-full object-cover opacity-80" />
+
+			{/* QR Frame */}
+			<div
+				className={cn(
+					"absolute inset-0 flex items-center justify-center",
+					isSuccess && "animate-pulse",
+				)}
+			>
+				<div className="relative w-48 h-48">
+					{/* Transparent center */}
+					<div className="absolute inset-0 bg-black/50" />
+					<div className="absolute inset-4 border-2 border-dashed border-white/30" />
+
+					{/* Corner markers */}
+					<div className="absolute -inset-0.5">
+						<div className="absolute top-0 left-0 w-6 h-6">
+							<div className="absolute inset-0 border-l-4 border-t-4 border-white" />
+						</div>
+						<div className="absolute top-0 right-0 w-6 h-6">
+							<div className="absolute inset-0 border-r-4 border-t-4 border-white" />
+						</div>
+						<div className="absolute bottom-0 left-0 w-6 h-6">
+							<div className="absolute inset-0 border-l-4 border-b-4 border-white" />
+						</div>
+						<div className="absolute bottom-0 right-0 w-6 h-6">
+							<div className="absolute inset-0 border-r-4 border-b-4 border-white" />
+						</div>
+					</div>
+
+					{/* Success indicator */}
+					{isSuccess && (
+						<div className="absolute inset-0 border-4 border-green-500 animate-pulse" />
+					)}
+				</div>
 			</div>
 		</div>
 	);
