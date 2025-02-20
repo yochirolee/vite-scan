@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ScanApp</string>
+    <string name="title_activity_main">ScanApp</string>
+    <string name="package_name">com.ctenvios.scan</string>
+    <string name="custom_url_scheme">com.ctenvios.scan</string>
+</resources>

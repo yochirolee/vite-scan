@@ -2,7 +2,7 @@ export const statuses = [
 	{
 		id: 5,
 		name: "Desagrupar",
-		        link: "/ungroup",
+		link: "/ungroup",
 	},
 	{
 		id: 6,
@@ -28,5 +28,10 @@ export const statuses = [
 		id: 10,
 		name: "Entregado",
 		link: "/scan/10",
+	},
+	{
+		id: 11,
+		name: "Ubicación",
+		link: "/location",
 	},
 ];
