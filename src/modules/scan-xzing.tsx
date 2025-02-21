@@ -2,14 +2,11 @@ import { useState } from "react";
 import { CameraScan } from "./components/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-
 import { useParams } from "react-router-dom";
 import { CameraIcon, ChevronRight, Loader2, Save } from "lucide-react";
 import { statuses } from "@/data/data";
 import { Button } from "@/components/ui/button";
-import { baseUrl } from "@/api/api";
 import { Card } from "@/components/ui/card";
-import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Stats } from "./scan/components/stats";
 import { toast } from "sonner";
@@ -28,18 +25,19 @@ interface Shipment {
 	timestamp?: string;
 	scanned?: boolean;
 	invoiceId?: string;
-	agency?: string;
+	agency?: {
+		name: string;
+	};
 	description?: string;
-	// ... other shipment properties
 }
 
 export const ScanXzing = () => {
 	const [cameraMode, setCameraMode] = useState(false);
 	const [hbl, setHbl] = useState("");
 	const { id } = useParams();
-	const [isLoading, setIsLoading] = useState(false);
+	/* const [isLoading, setIsLoading] = useState(false);
 	const [shipments, setShipments] = useState<Shipment[]>([]);
-	const { data: scannedShipments, isLoading: isLoadingScannedShipments } = useGetScannedShipments(
+	 */ const { data: scannedShipments, isLoading: isLoadingScannedShipments } = useGetScannedShipments(
 		parseInt(id || "0"),
 	);
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
@@ -120,7 +118,7 @@ export const ScanXzing = () => {
 		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
 		setHbl(formattedHbl);
 		//if hbl exist on scannedShipments, show toast
-		if (scannedShipments?.some((shipment: any) => shipment.hbl === formattedHbl)) {
+		if (scannedShipments?.some((shipment: Shipment) => shipment.hbl === formattedHbl)) {
 			toast.error("HBL ya escaneado");
 			return;
 		}
@@ -145,30 +143,21 @@ export const ScanXzing = () => {
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}
-				{isLoading && (
+				{isLoadingScanShipment && (
 					<div className="absolute inset-0 flex items-center justify-center">
 						<Loader2 className="w-4 h-4 animate-spin" />
 					</div>
 				)}
-				<Stats parcels={shipments || []} />
+				<Stats parcels={scannedShipments || []} />
 			</div>
-			<Button
-				variant="outline"
-				onClick={() =>
-					toast("Event has been created", {
-						description: "Sunday, December 03, 2023 at 9:00 AM",
-						action: {
-							label: "Undo",
-							onClick: () => console.log("Undo"),
-						},
-					})
-				}
-			>
-				Show Toast
-			</Button>
+
 			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
-				{isLoadingScannedShipments && <div>Loading...</div>}
-				{scannedShipments?.map((shipment, index) => (
+				{isLoadingScannedShipments && (
+					<div className="absolute inset-0 flex items-center justify-center">
+						<Loader2 className="w-4 h-4 animate-spin" />
+					</div>
+				)}
+				{scannedShipments?.map((shipment: Shipment, index: number) => (
 					<Card
 						className={`flex items-center m-2 justify-between text-xs p-2 ${
 							shipment?.timestamp ? "bg-green-500/30" : "bg-muted/20 text-muted-foreground"
