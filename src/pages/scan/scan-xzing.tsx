@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { CameraScan } from "@/components/camera/camera-scan-input";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { useParams } from "react-router-dom";
-import { AlertCircle, CameraIcon, Save } from "lucide-react";
-import { statuses } from "@/data/data";
+import { AlertCircle, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";

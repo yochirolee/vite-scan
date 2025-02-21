@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useFetchContainers } from "@/modules/scan/hooks/use-containers";
+import { useGetContainers } from "@/hooks/use-containers";
 
 export const ContainerSelect = ({
 	setSelectedContainer,
@@ -23,7 +23,7 @@ export const ContainerSelect = ({
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
 
-	const { data: containers = [], isLoading, error } = useFetchContainers();
+	const { data: containers = [], isLoading, error } = useGetContainers();
 
 	if (error) {
 		return <div>Error loading containers</div>;

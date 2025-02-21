@@ -62,6 +62,27 @@ const api = {
 			const response = await axiosInstance.get("/containers");
 			return response.data;
 		},
+		getContainerById: async (containerId: number) => {
+			const response = await axiosInstance.get(`/containers/${containerId}/shipments`);
+			return response.data;
+		},
+		containerToPort: async (containerId: number, timestamp: Date) => {
+			const response = await axiosInstance.post(`/containers/toPort/${containerId}`, {
+				timestamp,
+			});
+			return response.data;
+		},
+		updateContainerShipmentsStatus: async (
+			containerId: number,
+			statusId: number,
+			timestamp: Date,
+		) => {
+			const response = await axiosInstance.put(`/containers/update/${containerId}/shipments`, {
+				timestamp,
+				statusId,
+			});
+			return response.data;
+		},
 	},
 	shipments: {
 		getAll: async () => {

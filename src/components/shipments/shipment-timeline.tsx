@@ -1,7 +1,21 @@
 import ShipmentTimelineItem from "./shipment-timeline-item";
-import { getIcon } from "../common/getIcon";
-import { ShipmentEvent } from "@/data/data";
+import { getIcon } from "@/components/common/getIcon";
 
+export type ShipmentEvent = {
+	id: string;
+	status: {
+		code: string;
+		description: string;
+		name: string;
+		id: number;
+	};
+	user: {
+		id: number;
+		name: string;
+	};
+	timestamp: string;
+	isCompleted: boolean;
+};
 export default function ShipmentTimeline({ events }: { events: ShipmentEvent[] }) {
 	return (
 		<div className="max-w-2xl mx-auto p-6">

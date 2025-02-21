@@ -6,7 +6,6 @@ import MainPage from "@/pages";
 
 export default function AppRouter() {
 	const { user } = useAuthContext();
-	
 
 	return (
 		<Routes>
