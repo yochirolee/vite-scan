@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 export const useGetScannedShipments = (statusId: number) => {
 	return useQuery({
-		queryKey: ["scanned-shipments", statusId],
+		queryKey: ["scanned-shipments"],
 		queryFn: () => api.shipments.scanned(statusId),
 		enabled: !!statusId,
 	});
@@ -30,7 +30,7 @@ export const useScanShipment = (hbl: string) => {
 				location?.longitude,
 			),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["scanned-shipments", statusId] });
+			queryClient.invalidateQueries({ queryKey: ["scanned-shipments"] });
 		},
 		onError: () => {
 			toast.error("Error al escanear el HBL", {

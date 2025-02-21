@@ -1,13 +1,19 @@
 import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 
-export const Stats = ({ parcels }: { parcels: any[] }) => {
+interface Shipment {
+	hbl: string;
+	timestamp?: string;
+	scanned?: boolean;
+}
+
+export const Stats = ({ shipments }: { shipments: Shipment[] }) => {
 	const stats = useMemo(() => {
-		const total = parcels.length;
-		const scanned = parcels.filter((parcel) => parcel.scanned).length;
-		const pending = parcels.filter((parcel) => !parcel.scanned).length;
+		const total = shipments.length;
+		const scanned = shipments.filter((shipment) => shipment.scanned).length;
+		const pending = shipments.filter((shipment) => !shipment.scanned).length;
 		return { total, scanned, pending };
-	}, [parcels]);
+	}, [shipments]);
 
 	return (
 		<Card className="grid  bg-muted h-10 gap-2  grid-cols-4">

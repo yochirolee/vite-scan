@@ -3,7 +3,7 @@ import { CameraScan } from "./components/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useParams } from "react-router-dom";
-import { CameraIcon, ChevronRight, Loader2, Save } from "lucide-react";
+import { AlertCircle, CameraIcon, ChevronRight, Loader2, Save } from "lucide-react";
 import { statuses } from "@/data/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -37,9 +37,11 @@ export const ScanXzing = () => {
 	const { id } = useParams();
 	/* const [isLoading, setIsLoading] = useState(false);
 	const [shipments, setShipments] = useState<Shipment[]>([]);
-	 */ const { data: scannedShipments, isLoading: isLoadingScannedShipments } = useGetScannedShipments(
-		parseInt(id || "0"),
-	);
+	 */ const {
+		data: scannedShipments,
+		isLoading: isLoadingScannedShipments,
+		isError,
+	} = useGetScannedShipments(parseInt(id || "0"));
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
 
 	console.log(shipments); */
@@ -148,13 +150,18 @@ export const ScanXzing = () => {
 						<Loader2 className="w-4 h-4 animate-spin" />
 					</div>
 				)}
-				<Stats parcels={scannedShipments || []} />
+				<Stats shipments={scannedShipments || []} />
 			</div>
 
 			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
 				{isLoadingScannedShipments && (
 					<div className="absolute inset-0 flex items-center justify-center">
 						<Loader2 className="w-4 h-4 animate-spin" />
+					</div>
+				)}
+				{isError && (
+					<div className="absolute inset-0 flex items-center justify-center">
+						<AlertCircle className="w-4 h-4 animate-spin" />
 					</div>
 				)}
 				{scannedShipments?.map((shipment: Shipment, index: number) => (
