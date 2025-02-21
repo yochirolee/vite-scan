@@ -18,10 +18,10 @@ export default function AppRouter() {
 					<Route path="/scan" element={<ScanPage />} />
 					<Route path="/select" element={<ContainerSelectPage />} />
 					<Route path="/ungroup/:id" element={<UngroupContainer />} />
-					<Route path="/main" element={<MainPage />} />
+					<Route path="/" element={<MainPage />} />
 					<Route path="/new-ungroup/:id" element={<Ungroup />} />
 					<Route path="/scan/:id" element={<ScanXzing />} />
-					<Route path="*" element={<Navigate to="/main" />} />
+					<Route path="*" element={<Navigate to="/" />} />
 				</>
 			) : (
 				<Route path="/login" element={<LoginForm />} />

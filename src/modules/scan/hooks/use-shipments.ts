@@ -22,7 +22,7 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 		mutationFn: () =>
 			api.shipments.scan(
 				hbl,
-				parseInt(statusId || "0"),
+				statusId,
 				timestamp,
 				location?.latitude,
 				location?.longitude,
