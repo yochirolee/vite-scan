@@ -72,16 +72,16 @@ const Ungroup = () => {
 
 	const onSubmit = (formData: UnGroupForm) => {
 		const { hbl } = formData;
-		const parcel = data?.find((parcel) => parcel.hbl === hbl);
-		if (!parcel) return;
-		console.log(parcel);
+		const shipment = data?.find((shipment) => shipment.hbl === hbl);
+		if (!shipment) return;
+		console.log(shipment);
 	};
 
 	return (
 		<div>
 			<h1>Desagrupe</h1>
 			<UngroupForm onSubmit={onSubmit} />
-			<ParcelsList parcels={data || []} />
+			<ParcelsList shipments={data || []} />
 		</div>
 	);
 };
