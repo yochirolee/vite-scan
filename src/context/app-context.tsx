@@ -1,7 +1,6 @@
 //write a context for the app
 
 import { createContext, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
 
 interface AppContextType {
 	cameraMode: boolean;

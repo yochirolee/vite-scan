@@ -15,6 +15,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetContainers } from "@/hooks/use-containers";
 
+type Container = {
+	id: string;
+	name: string;
+	createdAt: string;
+	weight: number;
+};
+
 export const ContainerSelect = ({
 	setSelectedContainer,
 }: {
@@ -39,7 +46,7 @@ export const ContainerSelect = ({
 					className="md:w-[300px] w-full justify-between"
 				>
 					{value ? (
-						containers.find((container) => container.id === value)?.name + " - " + value
+						containers.find((container: Container) => container?.id === value)?.name + " - " + value
 					) : isLoading ? (
 						<Skeleton className="h-4 w-full" />
 					) : (
@@ -54,7 +61,7 @@ export const ContainerSelect = ({
 					<CommandList>
 						<CommandEmpty>No containers found.</CommandEmpty>
 						<CommandGroup>
-							{containers.map((container) => (
+							{containers.map((container: Container) => (
 								<CommandItem
 									key={container.id}
 									value={container.id}
