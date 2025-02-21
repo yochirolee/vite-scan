@@ -13,6 +13,7 @@ import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Stats } from "./scan/components/stats";
 import { toast } from "sonner";
+import { useGetScannedShipments, useScanShipment } from "./scan/hooks/use-shipments";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -34,10 +35,13 @@ interface Shipment {
 
 export const ScanXzing = () => {
 	const [cameraMode, setCameraMode] = useState(false);
+	const [hbl, setHbl] = useState("");
 	const { id } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
 	const [shipments, setShipments] = useState<Shipment[]>([]);
-
+	const { data: scannedShipments, isLoading: isLoadingScannedShipments } = useGetScannedShipments(
+		parseInt(id || "0"),
+	);
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
 
 	console.log(shipments); */
@@ -51,7 +55,7 @@ export const ScanXzing = () => {
 		},
 	});
  */
-	const handleScan = async (value: string): Promise<void> => {
+	/* 	const handleScan = async (value: string): Promise<void> => {
 		setIsLoading(true);
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
 		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
@@ -107,8 +111,21 @@ export const ScanXzing = () => {
 			const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
 			return timeB - timeA;
 		});
-	};
+	}; */
 
+	const { mutate: scanShipment, isPending: isLoadingScanShipment } = useScanShipment(hbl);
+
+	const handleScan = (value: string) => {
+		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
+		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
+		setHbl(formattedHbl);
+		//if hbl exist on scannedShipments, show toast
+		if (scannedShipments?.some((shipment: any) => shipment.hbl === formattedHbl)) {
+			toast.error("HBL ya escaneado");
+			return;
+		}
+		scanShipment();
+	};
 	return (
 		<div className="relative px-4 flex flex-col h-dvh">
 			<div className="sticky  top-0 space-y-2">
@@ -124,7 +141,7 @@ export const ScanXzing = () => {
 					</div>
 				</div>
 				{cameraMode ? (
-					<CameraScan isLoading={isLoading} onScan={handleScan} />
+					<CameraScan isLoading={isLoadingScanShipment} onScan={handleScan} />
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}
@@ -150,7 +167,8 @@ export const ScanXzing = () => {
 				Show Toast
 			</Button>
 			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
-				{shipments?.map((shipment, index) => (
+				{isLoadingScannedShipments && <div>Loading...</div>}
+				{scannedShipments?.map((shipment, index) => (
 					<Card
 						className={`flex items-center m-2 justify-between text-xs p-2 ${
 							shipment?.timestamp ? "bg-green-500/30" : "bg-muted/20 text-muted-foreground"
@@ -163,7 +181,7 @@ export const ScanXzing = () => {
 								{shipment?.invoiceId}
 							</div>
 
-							<div>{shipment?.agency}</div>
+							<div>{shipment?.agency?.name}</div>
 							<div>{shipment?.description}</div>
 						</div>
 						<div className="flex items-center gap-1">

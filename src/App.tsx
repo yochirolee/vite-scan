@@ -3,7 +3,7 @@ import AppRouter from "./router/app_router";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/auth-context";
 import { ThemeProvider } from "./context/theme-context";
-import { Toaster } from "./components/ui/toaster";
+import { Toaster } from "sonner";
 import Layout from "./layout/app-layout";
 const queryClient = new QueryClient({
 	defaultOptions: {

@@ -1,34 +1,41 @@
 import { api } from "@/api/api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useGeolocation } from "@uidotdev/usehooks";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+export const useGetScannedShipments = (statusId: number) => {
+	return useQuery({
+		queryKey: ["scanned-shipments", statusId],
+		queryFn: () => api.shipments.scanned(statusId),
+		enabled: !!statusId,
+	});
+};
 
-interface Shipment {
-	id: string;
-	hbl: string;
-	// ... add other shipment properties
-}
+export const useScanShipment = (hbl: string) => {
+	const { id: statusId } = useParams();
+	const location = useGeolocation();
 
-export const useGetScannedShipments = (hbl: string) => {
 	const queryClient = useQueryClient();
-	const { data, isLoading, isError } = useQuery({
-		queryKey: ["scanned-shipments", hbl],
-		queryFn: () => api.shipments.scan(hbl),
-		enabled: !!hbl,
-		select: (data: Shipment) => {
-			queryClient.setQueryData<Shipment[]>(["scanned-shipments"], (prevData) => {
-				if (!prevData) return [data];
-				// Prevent duplicate entries
-				const exists = prevData.some((item) => item.hbl === data.hbl);
-				if (exists) return prevData;
-				return [...prevData, data];
+	const timestamp = new Date();
+	if (location) {
+		console.log(location, statusId, timestamp);
+	}
+	return useMutation({
+		mutationFn: () =>
+			api.shipments.scan(
+				hbl,
+				parseInt(statusId || "0"),
+				timestamp,
+				location?.latitude,
+				location?.longitude,
+			),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["scanned-shipments", statusId] });
+		},
+		onError: () => {
+			toast.error("Error al escanear el HBL", {
+				description: "Por favor, inténtelo de nuevo",
 			});
-			console.log(data);
-			return data;
 		},
 	});
-
-	return {
-		data,
-		isLoading,
-		isError,
-	} as const;
 };

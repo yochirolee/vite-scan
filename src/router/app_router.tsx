@@ -1,6 +1,5 @@
 import { useAuthContext } from "@/context/auth-context";
 import { LoginForm } from "@/modules/auth/login-form";
-import GeolocationPage from "@/modules/location";
 import { ScanXzing } from "@/modules/scan-xzing";
 import { ContainerSelectPage } from "@/modules/scan/container-select-page";
 import MainPage from "@/modules/scan/main-page";
@@ -22,7 +21,6 @@ export default function AppRouter() {
 					<Route path="/main" element={<MainPage />} />
 					<Route path="/new-ungroup/:id" element={<Ungroup />} />
 					<Route path="/scan/:id" element={<ScanXzing />} />
-					<Route path="/location" element={<GeolocationPage />} />
 					<Route path="*" element={<Navigate to="/main" />} />
 				</>
 			) : (

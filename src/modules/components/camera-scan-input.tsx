@@ -1,8 +1,18 @@
 import { useZxing } from "react-zxing";
+import { useMediaDevices } from "react-media-devices";
 import { useSound } from "use-sound";
 import scanSound from "../../success-beep.mp3";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+
+const constraints: MediaStreamConstraints = {
+	audio: false,
+	video: {
+		facingMode: "environment",
+		width: { ideal: 1280 },
+		height: { ideal: 720 },
+		aspectRatio: { ideal: 1.777777778 },
+		frameRate: { ideal: 30 },
+	},
+};
 
 interface CameraScanProps {
 	onScan: (hbl: string) => void;
@@ -10,64 +20,29 @@ interface CameraScanProps {
 }
 
 export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element => {
+	const { devices } = useMediaDevices({
+		constraints,
+	});
 	const [play] = useSound(scanSound);
-	const [isSuccess, setIsSuccess] = useState(false);
+
+	const deviceId = devices?.[0]?.deviceId;
 
 	const { ref } = useZxing({
+		deviceId: deviceId,
 		onDecodeResult: (result) => {
 			if (!isLoading) {
-				setIsSuccess(true);
 				onScan(result.getText());
 				play();
-				setTimeout(() => setIsSuccess(false), 1000);
 			}
 		},
-		constraints: {
-			video: {
-				facingMode: "environment",
-				width: { ideal: window.innerWidth },
-				height: { ideal: window.innerHeight / 3 },
-			},
-		},
+		constraints,
+		timeBetweenDecodingAttempts: 300,
 	});
 
 	return (
-		<div className="h-[33vh] relative overflow-hidden bg-black/90">
-			<video ref={ref} className="w-full h-full object-cover opacity-80" />
-
-			{/* QR Frame */}
-			<div
-				className={cn(
-					"absolute inset-0 flex items-center justify-center",
-					isSuccess && "animate-pulse",
-				)}
-			>
-				<div className="relative w-48 h-48">
-					{/* Transparent center */}
-					<div className="absolute inset-0 bg-black/50" />
-					<div className="absolute inset-4 border-2 border-dashed border-white/30" />
-
-					{/* Corner markers */}
-					<div className="absolute -inset-0.5">
-						<div className="absolute top-0 left-0 w-6 h-6">
-							<div className="absolute inset-0 border-l-4 border-t-4 border-white" />
-						</div>
-						<div className="absolute top-0 right-0 w-6 h-6">
-							<div className="absolute inset-0 border-r-4 border-t-4 border-white" />
-						</div>
-						<div className="absolute bottom-0 left-0 w-6 h-6">
-							<div className="absolute inset-0 border-l-4 border-b-4 border-white" />
-						</div>
-						<div className="absolute bottom-0 right-0 w-6 h-6">
-							<div className="absolute inset-0 border-r-4 border-b-4 border-white" />
-						</div>
-					</div>
-
-					{/* Success indicator */}
-					{isSuccess && (
-						<div className="absolute inset-0 border-4 border-green-500 animate-pulse" />
-					)}
-				</div>
+		<div>
+			<div className="flex h-[33vh] flex-col gap-4">
+				<video ref={ref} className="w-full h-full object-cover" autoPlay playsInline />
 			</div>
 		</div>
 	);

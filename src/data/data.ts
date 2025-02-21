@@ -29,9 +29,4 @@ export const statuses = [
 		name: "Entregado",
 		link: "/scan/10",
 	},
-	{
-		id: 11,
-		name: "Ubicación",
-		link: "/location",
-	},
 ];
