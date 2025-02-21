@@ -14,6 +14,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
 import { Loader } from "@/components/common/loader";
 import { useAppContext } from "@/context/app-context";
+import { Separator } from "@/components/ui/separator";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -141,7 +142,6 @@ export const ScanXzing = () => {
 					<HblScanner handleScan={handleScan} />
 				)}
 				{isLoadingScanShipment && <Loader />}
-				<Stats shipments={scannedShipments || []} />
 			</div>
 
 			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
@@ -190,13 +190,6 @@ export const ScanXzing = () => {
 					</Card>
 				))}
 			</ScrollArea>
-
-			<div className="sticky bottom-0 p-4 bg-background border-t">
-				<Button className="w-full" variant="outline" onClick={() => {}}>
-					<Save className="w-4 h-4 mr-2" />
-					Save
-				</Button>
-			</div>
 		</div>
 	);
 };

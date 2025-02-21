@@ -13,6 +13,12 @@ export type ShipmentEvent = {
 		id: number;
 		name: string;
 	};
+	location: {
+		id: number;
+		state: string;
+		country_code: string;
+		city: string;
+	};
 	timestamp: string;
 	isCompleted: boolean;
 };
@@ -31,6 +37,7 @@ export default function ShipmentTimeline({ events }: { events: ShipmentEvent[] }
 							timestamp={event.timestamp}
 							user={event.user}
 							isCompleted={event.isCompleted}
+							location={event.location}
 							isLast={index === events.length - 1}
 						/>
 					);
