@@ -1,18 +1,16 @@
 import { api } from "@/api/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeolocation } from "@uidotdev/usehooks";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 export const useGetScannedShipments = (statusId: number) => {
 	return useQuery({
-		queryKey: ["scanned-shipments"],
+		queryKey: ["scanned-shipments", statusId],
 		queryFn: () => api.shipments.scanned(statusId),
 		enabled: !!statusId,
 	});
 };
 
-export const useScanShipment = (hbl: string) => {
-	const { id: statusId } = useParams();
+export const useScanShipment = (hbl: string, statusId: number) => {
 	const location = useGeolocation();
 
 	const queryClient = useQueryClient();

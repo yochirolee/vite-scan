@@ -113,7 +113,10 @@ export const ScanXzing = () => {
 		});
 	}; */
 
-	const { mutate: scanShipment, isPending: isLoadingScanShipment } = useScanShipment(hbl);
+	const { mutate: scanShipment, isPending: isLoadingScanShipment } = useScanShipment(
+		hbl,
+		parseInt(id || "0"),
+	);
 
 	const handleScan = (value: string) => {
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
