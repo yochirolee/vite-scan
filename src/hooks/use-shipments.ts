@@ -1,7 +1,6 @@
 import { api } from "@/api/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeolocation } from "@uidotdev/usehooks";
-import { Check } from "lucide-react";
 import { toast } from "sonner";
 export const useGetScannedShipments = (statusId: number) => {
 	return useQuery({
