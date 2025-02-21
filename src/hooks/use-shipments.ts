@@ -1,6 +1,7 @@
 import { api } from "@/api/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeolocation } from "@uidotdev/usehooks";
+import { Check } from "lucide-react";
 import { toast } from "sonner";
 export const useGetScannedShipments = (statusId: number) => {
 	return useQuery({
@@ -27,7 +28,10 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 		mutationFn: () =>
 			api.shipments.scan(hbl, statusId, timestamp, location?.latitude, location?.longitude),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["scanned-shipments"] });
+			queryClient.invalidateQueries({ queryKey: ["scanned-shipments", statusId] });
+			toast.success("HBL escaneado correctamente", {
+				description: "El HBL ha sido escaneado correctamente",
+			});
 		},
 		onError: () => {
 			toast.error("Error al escanear el HBL", {
