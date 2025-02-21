@@ -2,11 +2,9 @@ import { useState } from "react";
 import { CameraScan } from "@/components/camera/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
-import { AlertCircle, Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Stats } from "@/components/stats";
 import { toast } from "sonner";
 import { useGetScannedShipments, useScanShipment } from "@/hooks/use-shipments";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -14,7 +12,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
 import { Loader } from "@/components/common/loader";
 import { useAppContext } from "@/context/app-context";
-import { Separator } from "@/components/ui/separator";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
