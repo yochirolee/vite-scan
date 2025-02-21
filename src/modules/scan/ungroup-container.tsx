@@ -15,8 +15,8 @@ import { ArrowLeft, Save } from "lucide-react";
 export default function UngroupContainer() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [parcels, setParcels] = useState(
-		JSON.parse(localStorage.getItem(`container-${id}`) || "{}").parcels || [],
+	const [shipments, setShipments] = useState(
+		JSON.parse(localStorage.getItem(`container-${id}`) || "{}").shipments || [],
 	);
 
 	//load the container data from the local storage and set the parcels
@@ -28,18 +28,18 @@ export default function UngroupContainer() {
 	}, [id, parcels]); */
 
 	const handleScan = (hbl: string) => {
-		setParcels((prevPackages: any) => {
-			const index = prevPackages.findIndex((pkg: any) => pkg.hbl === hbl);
-			let newPackages = [...prevPackages];
+		setShipments((prevShipments: any) => {
+			const index = prevShipments.findIndex((shipment: any) => shipment.hbl === hbl);
+			let newShipments = [...prevShipments];
 
-			if (index !== -1 && !prevPackages[index].scanned) {
-				newPackages[index] = {
-					...newPackages[index],
+				if (index !== -1 && !prevShipments[index].scanned) {
+				newShipments[index] = {
+					...newShipments[index],
 					scanned: true,
 					updatedAt: new Date().toISOString(),
 				};
 				// Sort packages by scannedAt date in descending order
-				newPackages = newPackages.sort((a, b) => {
+				newShipments = newShipments.sort((a, b) => {
 					if (!a.updatedAt) return 1;
 					if (!b.updatedAt) return -1;
 					return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -50,14 +50,14 @@ export default function UngroupContainer() {
 			localStorage.setItem(
 				`container-${id}`,
 				JSON.stringify({
-					parcels: newPackages,
+					shipments: newShipments,
 					action: "ungroup",
 					containerId: id,
 					isDone: false,
 				}),
 			);
 
-			return newPackages;
+			return newShipments;
 		});
 	};
 
@@ -75,9 +75,9 @@ export default function UngroupContainer() {
 				</Button>
 			</div>
 			<HBLScanner handleScan={handleScan} />
-			<Stats parcels={parcels || []} />
+			<Stats shipments={shipments || []} />
 
-			<ParcelsList parcels={parcels || []} />
+			<ParcelsList shipments={shipments || []} />
 		</div>
 	);
 }

@@ -4,9 +4,9 @@ import { Card } from "@/components/ui/card";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { CheckCircle, CircleOff, EllipsisVerticalIcon } from "lucide-react";
 
-export function ParcelsList({ parcels  }: { parcels: any[] }) {
+export function ParcelsList({ shipments }: { shipments: any[] }) {
 	//order by updatedAt
-	const sortedParcels = parcels.sort(
+	const sortedShipments = shipments.sort(
 		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
 	);
 	// Create a ref for the scrolling container
@@ -14,7 +14,7 @@ export function ParcelsList({ parcels  }: { parcels: any[] }) {
 
 	// Set up the virtualizer
 	const virtualizer = useVirtualizer({
-		count: sortedParcels.length,
+		count: sortedShipments.length,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => 100, // Estimate height of each item in pixels
 		overscan: 5, // Number of items to render outside of the visible area
@@ -31,7 +31,7 @@ export function ParcelsList({ parcels  }: { parcels: any[] }) {
 				}}
 			>
 				{virtualizer.getVirtualItems().map((virtualItem) => {
-					const item = parcels[virtualItem.index];
+					const item = sortedShipments[virtualItem.index];
 					return (
 						<div
 							key={item.hbl}
