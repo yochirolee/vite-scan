@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/auth-context";
 import { ThemeProvider } from "./context/theme-context";
 import { Toaster } from "sonner";
 import Layout from "./layout/app-layout";
+import { AppProvider } from "./context/app-context";
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
@@ -24,10 +25,12 @@ function App() {
 				<BrowserRouter>
 					<QueryClientProvider client={queryClient}>
 						<AuthProvider>
-							<Layout>
-								<Toaster />
-								<AppRouter />
-							</Layout>
+							<AppProvider>
+								<Layout>
+									<AppRouter />
+									<Toaster />
+								</Layout>
+							</AppProvider>
 						</AuthProvider>
 					</QueryClientProvider>
 				</BrowserRouter>

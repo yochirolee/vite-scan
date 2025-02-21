@@ -72,11 +72,11 @@ const api = {
 			const response = await axiosInstance.get("/shipments/search", { params });
 			return response.data;
 		},
-		upsert: async (shipment: ShipmentsInterface) => {
-			console.log(shipment, "on API");
-			const response = await axiosInstance.post("/shipments/upsert", shipment);
+		getShipmentByHbl: async (hbl: string) => {
+			const response = await axiosInstance.get(`/shipments/hbl/${hbl}`);
 			return response.data;
 		},
+
 		scanned: async (statusId: number) => {
 			const response = await axiosInstance.get(`/shipments/scanned/${statusId}`);
 			console.log(response.data, "on API");

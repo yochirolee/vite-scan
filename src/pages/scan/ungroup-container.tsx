@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { HBLScanner } from "./components/hbl-scanner";
-import { ParcelsList } from "./components/parcels-list";
-import { Stats } from "./components/stats";
+import { HBLScanner } from "@/components/hbl-scanner";
+import { ParcelsList } from "@/components/parcels-list";
+import { Stats } from "@/components/stats";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save } from "lucide-react";

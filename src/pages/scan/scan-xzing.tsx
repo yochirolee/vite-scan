@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { CameraScan } from "./components/camera-scan-input";
+import { CameraScan } from "@/components/camera/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useParams } from "react-router-dom";
-import { AlertCircle, CameraIcon, ChevronRight, Loader2, Save } from "lucide-react";
+import { AlertCircle, CameraIcon, Save } from "lucide-react";
 import { statuses } from "@/data/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Stats } from "./scan/components/stats";
+import { Stats } from "@/components/stats";
 import { toast } from "sonner";
-import { useGetScannedShipments, useScanShipment } from "./scan/hooks/use-shipments";
+import { useGetScannedShipments, useScanShipment } from "@/hooks/use-shipments";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
+import { Loader } from "@/components/common/loader";
+import { useAppContext } from "@/context/app-context";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -32,7 +37,7 @@ interface Shipment {
 }
 
 export const ScanXzing = () => {
-	const [cameraMode, setCameraMode] = useState(false);
+	const { cameraMode } = useAppContext();
 	const [hbl, setHbl] = useState("");
 	const { id } = useParams();
 	/* const [isLoading, setIsLoading] = useState(false);
@@ -132,36 +137,17 @@ export const ScanXzing = () => {
 	return (
 		<div className="relative px-4 flex flex-col h-dvh">
 			<div className="sticky  top-0 space-y-2">
-				<div className="flex items-center justify-between">
-					<div className="flex items-center gap-2">
-						<h1 className=" font-bold">
-							{statuses.find((status) => status.id === parseInt(id || "0"))?.name}
-						</h1>
-					</div>
-					<div className="flex items-center justify-end  space-x-2">
-						<CameraIcon className={cameraMode ? "w-4 h-4" : "w-4 h-4 text-gray-400"} />
-						<Switch id="camera-mode" checked={cameraMode} onCheckedChange={setCameraMode} />
-					</div>
-				</div>
 				{cameraMode ? (
 					<CameraScan isLoading={isLoadingScanShipment} onScan={handleScan} />
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}
-				{isLoadingScanShipment && (
-					<div className="absolute inset-0 flex items-center justify-center">
-						<Loader2 className="w-4 h-4 animate-spin" />
-					</div>
-				)}
+				{isLoadingScanShipment && <Loader />}
 				<Stats shipments={scannedShipments || []} />
 			</div>
 
 			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
-				{isLoadingScannedShipments && (
-					<div className="absolute inset-0 flex items-center justify-center">
-						<Loader2 className="w-4 h-4 animate-spin" />
-					</div>
-				)}
+				{isLoadingScannedShipments && <Loader />}
 				{isError && (
 					<div className="absolute inset-0 flex items-center justify-center">
 						<AlertCircle className="w-4 h-4 animate-spin" />
@@ -192,9 +178,16 @@ export const ScanXzing = () => {
 									{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
 								</div>
 							</div>
-							<Button variant="ghost" size="icon">
-								<ChevronRight className="w-4 h-4" />
-							</Button>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<ShipmentSheetDetails hbl={shipment?.hbl} />
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>History</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</div>
 					</Card>
 				))}

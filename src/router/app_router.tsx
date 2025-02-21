@@ -1,30 +1,23 @@
-import { useAuthContext } from "@/context/auth-context";
-import { LoginForm } from "@/modules/auth/login-form";
-import { ScanXzing } from "@/modules/scan-xzing";
-import { ContainerSelectPage } from "@/modules/scan/container-select-page";
-import MainPage from "@/modules/scan/main-page";
-import ScanPage from "@/modules/scan/ScanPage";
-import Ungroup from "@/modules/scan/ungroup";
-import UngroupContainer from "@/modules/scan/ungroup-container";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useAuthContext } from "@/context/auth-context";
+import LoginPage from "@/pages/auth/login-page";
+import { ScanXzing } from "@/pages/scan/scan-xzing";
+import MainPage from "@/pages";
 
 export default function AppRouter() {
 	const { user } = useAuthContext();
+	
 
 	return (
 		<Routes>
 			{user ? (
 				<>
-					<Route path="/scan" element={<ScanPage />} />
-					<Route path="/select" element={<ContainerSelectPage />} />
-					<Route path="/ungroup/:id" element={<UngroupContainer />} />
 					<Route path="/" element={<MainPage />} />
-					<Route path="/new-ungroup/:id" element={<Ungroup />} />
 					<Route path="/scan/:id" element={<ScanXzing />} />
 					<Route path="*" element={<Navigate to="/" />} />
 				</>
 			) : (
-				<Route path="/login" element={<LoginForm />} />
+				<Route path="/login" element={<LoginPage />} />
 			)}
 			{/* always redirect to login if no token */}
 			<Route path="*" element={<Navigate to="/login" />} />

@@ -13,6 +13,11 @@ export const useGetScannedShipments = (statusId: number) => {
 export const useScanShipment = (hbl: string, statusId: number) => {
 	const location = useGeolocation();
 
+	location.error &&
+		toast.error("Error al obtener la ubicación", {
+			description: "Por favor, inténtelo de nuevo",
+		});
+
 	const queryClient = useQueryClient();
 	const timestamp = new Date();
 	if (location) {
@@ -20,13 +25,7 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 	}
 	return useMutation({
 		mutationFn: () =>
-			api.shipments.scan(
-				hbl,
-				statusId,
-				timestamp,
-				location?.latitude,
-				location?.longitude,
-			),
+			api.shipments.scan(hbl, statusId, timestamp, location?.latitude, location?.longitude),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["scanned-shipments"] });
 		},
@@ -35,5 +34,13 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 				description: "Por favor, inténtelo de nuevo",
 			});
 		},
+	});
+};
+export const useGetShipmentByHbl = (hbl: string) => {
+	console.log(hbl);
+	return useQuery({
+		queryKey: ["getShipmentByHbl", hbl],
+		queryFn: () => api.shipments.getShipmentByHbl(hbl),
+		enabled: !!hbl,
 	});
 };
