@@ -1,5 +1,6 @@
 import { User } from "@/types/user";
 import axios from "axios";
+import { createOfflineQueue } from '@/lib/offline-queue';
 
 export interface ShipmentsInterface {
 	hbls: string[];
@@ -28,6 +29,8 @@ axiosInstance.interceptors.request.use(
 	},
 	(error) => Promise.reject(error),
 );
+
+const offlineQueue = createOfflineQueue();
 
 const api = {
 	users: {
@@ -110,14 +113,28 @@ const api = {
 			lat: number | null,
 			loc: number | null,
 		) => {
-			const response = await axiosInstance.post(`/shipments/scan`, {
-				hbl,
-				statusId,
-				timestamp,
-				lat,
-				loc,
-			});
-			return response.data;
+			try {
+				const response = await axiosInstance.post(`/shipments/scan`, {
+					hbl,
+					statusId,
+					timestamp,
+					lat,
+					loc,
+				});
+				return response.data;
+			} catch (error) {
+				if (!navigator.onLine) {
+					// Queue for later sync
+					offlineQueue.add({
+						type: 'scan',
+						data: { hbl, statusId, timestamp, lat, loc },
+						timestamp: new Date().toISOString(),
+					});
+					// Return optimistic response
+					return { success: true, offline: true };
+				}
+				throw error;
+			}
 		},
 	},
 };

@@ -23,12 +23,14 @@ interface AuthContextType {
 }
 
 interface User {
-	id: string;
+	userId: string;
 	email: string;
 	agencyId: number;
 	role: string;
 	roleId: number;
 	username: string;
+	exp: number;
+	iat: number;
 
 	// Add other user properties as needed
 }
@@ -79,13 +81,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 					setToken(data.token);
 					const decodedToken = jwtDecode<User>(data.token);
 					const user: User = {
-						id: decodedToken.id,
+						userId: decodedToken.userId,
 						email: decodedToken.email,
 						agencyId: decodedToken.agencyId,
 						role: decodedToken.role,
 						roleId: decodedToken.roleId,
 						username: decodedToken.username,
+						exp: decodedToken.exp,
+						iat: decodedToken.iat,
 					};
+
 					setUser(user);
 					//save user to local storage
 					localStorage.setItem(TOKEN_KEY, JSON.stringify(data.token));

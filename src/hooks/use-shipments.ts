@@ -2,11 +2,14 @@ import { api } from "@/api/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { toast } from "sonner";
+import { useAuthContext } from "@/context/auth-context";
 export const useGetScannedShipments = (statusId: number) => {
+	const { user } = useAuthContext();
+	console.log(user);
 	return useQuery({
-		queryKey: ["scanned-shipments", statusId],
+		queryKey: ["scanned-shipments", statusId, user?.userId],
 		queryFn: () => api.shipments.scanned(statusId),
-		enabled: !!statusId,
+		enabled: !!statusId && !!user?.userId,
 	});
 };
 
@@ -23,11 +26,12 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 	if (location) {
 		console.log(location, statusId, timestamp);
 	}
+	const { user } = useAuthContext();
 	return useMutation({
 		mutationFn: () =>
 			api.shipments.scan(hbl, statusId, timestamp, location?.latitude, location?.longitude),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["scanned-shipments", statusId] });
+			queryClient.invalidateQueries({ queryKey: ["scanned-shipments", statusId, user?.userId] });
 			toast.success("HBL escaneado correctamente", {
 				description: "El HBL ha sido escaneado correctamente",
 			});
@@ -40,7 +44,6 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 	});
 };
 export const useGetShipmentByHbl = (hbl: string) => {
-	console.log(hbl);
 	return useQuery({
 		queryKey: ["getShipmentByHbl", hbl],
 		queryFn: () => api.shipments.getShipmentByHbl(hbl),
