@@ -1,6 +1,6 @@
 import { User } from "@/types/user";
 import axios from "axios";
-import { createOfflineQueue } from '@/lib/offline-queue';
+import { createOfflineQueue } from "@/lib/offline-queue";
 
 export interface ShipmentsInterface {
 	hbls: string[];
@@ -103,6 +103,7 @@ const api = {
 
 		scanned: async (statusId: number) => {
 			const response = await axiosInstance.get(`/shipments/scanned/${statusId}`);
+			console.log(response.data, "response.data on api scanned");
 			return response.data;
 		},
 		scan: async (

@@ -44,6 +44,8 @@ export const ScanXzing = () => {
 		isLoading: isLoadingScannedShipments,
 		isError,
 	} = useGetScannedShipments(parseInt(id || "0"));
+
+	console.log(scannedShipments);
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
 
 	console.log(shipments); */
@@ -115,7 +117,7 @@ export const ScanXzing = () => {
 		});
 	}; */
 
-	const { mutate: scanShipment, isPending: isLoadingScanShipment } = useScanShipment(
+	const { mutate: scanShipment, isPending: isLoadingScanShipment, isError: isErrorScanShipment } = useScanShipment(
 		hbl,
 		parseInt(id || "0"),
 	);
@@ -140,6 +142,7 @@ export const ScanXzing = () => {
 					<HblScanner handleScan={handleScan} />
 				)}
 				{isLoadingScanShipment && <Loader />}
+				{isErrorScanShipment && <div>Error al escanear el HBL</div>}
 			</div>
 			<div className="flex flex-col mb-10 space-y-1 flex-1 min-h-0 h-full">
 				<ScrollArea className="flex flex-col my-4 pr-4   flex-1 min-h-0 h-full">
