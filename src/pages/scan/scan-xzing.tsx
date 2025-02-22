@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { useGetScannedShipments, useScanShipment } from "@/hooks/use-shipments";
@@ -132,7 +133,7 @@ export const ScanXzing = () => {
 	};
 	return (
 		<div className="relative px-4 flex flex-col h-dvh">
-			<div className="sticky  top-0 space-y-2">
+			<div className="sticky  top-0 ">
 				{cameraMode ? (
 					<CameraScan isLoading={isLoadingScanShipment} onScan={handleScan} />
 				) : (
@@ -140,39 +141,36 @@ export const ScanXzing = () => {
 				)}
 				{isLoadingScanShipment && <Loader />}
 			</div>
-
-			<ScrollArea className="flex flex-col p-2 space-y-1 flex-1 min-h-0 h-full">
-				{isLoadingScannedShipments && <Loader />}
-				{isError && (
-					<div className="absolute inset-0 flex items-center justify-center">
-						<AlertCircle className="w-4 h-4 animate-spin" />
-					</div>
-				)}
-				{scannedShipments?.map((shipment: Shipment, index: number) => (
-					<Card
-						className={`flex items-center m-2 justify-between text-xs p-2 ${
-							shipment?.timestamp ? "bg-green-500/30" : "bg-muted/20 text-muted-foreground"
-						}`}
-						key={index}
-					>
-						<div className="flex flex-col gap-2">
-							<div>
-								<span>{shipment?.hbl} </span>
-								{shipment?.invoiceId}
-							</div>
-
-							<div>{shipment?.agency?.name}</div>
-							<div>{shipment?.description}</div>
+			<div className="flex flex-col mb-10 space-y-1 flex-1 min-h-0 h-full">
+				<ScrollArea className="flex flex-col my-4 pr-4   flex-1 min-h-0 h-full">
+					{isLoadingScannedShipments && <Loader />}
+					{isError && (
+						<div className="absolute inset-0 flex items-center justify-center">
+							<AlertCircle className="w-4 h-4 animate-spin" />
 						</div>
-						<div className="flex items-center gap-1">
-							<div className="flex flex-col gap-2 justify-end">
-								{/* <div className="text-xs text-gray-500">
-									{shipment?.state}/{shipment?.city}
-								</div> */}
-								<div className="text-xs justify-end text-green-600">
-									{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
+					)}
+					{scannedShipments?.map((shipment: Shipment, index: number) => (
+						<Card
+							className="flex items-center my-2 justify-between text-xs p-2 text-muted-foreground"
+							key={index}
+						>
+							<div className="flex flex-col w-full gap-2">
+								<div className="flex items-center gap-2 justify-between w-full">
+									<div>
+										<span className="font-bold">{shipment?.hbl} </span>
+										<Badge variant="outline" className="text-xs mx-2">
+											{shipment?.invoiceId}
+										</Badge>
+									</div>
+									<div className="text-xs justify-end ">
+										{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
+									</div>
 								</div>
+
+								<div>{shipment?.agency?.name}</div>
+								<div>{shipment?.description}</div>
 							</div>
+
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger asChild>
@@ -183,10 +181,10 @@ export const ScanXzing = () => {
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
-						</div>
-					</Card>
-				))}
-			</ScrollArea>
+						</Card>
+					))}
+				</ScrollArea>
+			</div>
 		</div>
 	);
 };

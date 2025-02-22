@@ -103,7 +103,6 @@ const api = {
 
 		scanned: async (statusId: number) => {
 			const response = await axiosInstance.get(`/shipments/scanned/${statusId}`);
-			console.log(response.data, "on API");
 			return response.data;
 		},
 		scan: async (
@@ -126,11 +125,12 @@ const api = {
 				if (!navigator.onLine) {
 					// Queue for later sync
 					offlineQueue.add({
-						type: 'scan',
+						type: "scan",
+						service: "shipments",
 						data: { hbl, statusId, timestamp, lat, loc },
 						timestamp: new Date().toISOString(),
 					});
-					// Return optimistic response
+					//	 Return optimistic response
 					return { success: true, offline: true };
 				}
 				throw error;

@@ -6,8 +6,8 @@ import { ThemeProvider } from "./context/theme-context";
 import { Toaster } from "sonner";
 import Layout from "./layout/app-layout";
 import { AppProvider } from "./context/app-context";
-import { persistQueryClient } from '@tanstack/react-query-persist-client';
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -16,9 +16,8 @@ const queryClient = new QueryClient({
 			refetchOnMount: false,
 			refetchOnReconnect: false,
 			staleTime: Infinity,
-			cacheTime: Infinity,
 			retry: 3,
-			networkMode: 'offlineFirst'
+			networkMode: "offlineFirst",
 		},
 	},
 });
