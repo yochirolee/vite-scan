@@ -31,7 +31,7 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 		toast.error("No estás autenticado", {
 			description: "Por favor, inicie sesión para escanear HBLs",
 		});
-		return;
+		
 	}
 	return useMutation({
 		mutationFn: () =>
