@@ -13,6 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const isOnline = useOnlineStatus();
 	const { id } = useParams();
 	const navigate = useNavigate();
+	console.log(user);
 	return (
 		<div className="min-h-screen bg-background">
 			<nav className="  z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

@@ -27,6 +27,12 @@ export const useScanShipment = (hbl: string, statusId: number) => {
 		console.log(location, statusId, timestamp);
 	}
 	const { user } = useAuthContext();
+	if (!user) {
+		toast.error("No estás autenticado", {
+			description: "Por favor, inicie sesión para escanear HBLs",
+		});
+		return;
+	}
 	return useMutation({
 		mutationFn: () =>
 			api.shipments.scan(hbl, statusId, timestamp, location?.latitude, location?.longitude),
