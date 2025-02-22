@@ -6,28 +6,16 @@ import { ThemeProvider } from "./context/theme-context";
 import { Toaster } from "sonner";
 import Layout from "./layout/app-layout";
 import { AppProvider } from "./context/app-context";
-import { persistQueryClient } from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			refetchOnWindowFocus: false,
+			refetchOnWindowFocus: true,
 			refetchOnMount: false,
 			refetchOnReconnect: false,
-		
+			staleTime: 5 * 60 * 1000, // 5 m
+			retry: true,
 		},
 	},
-});
-
-const persister = createSyncStoragePersister({
-	storage: window.localStorage,
-});
-
-persistQueryClient({
-	queryClient,
-	persister,
-	maxAge: Infinity,
 });
 
 function App() {
