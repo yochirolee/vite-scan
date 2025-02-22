@@ -1,11 +1,10 @@
 import { api } from "@/api/api";
 
 type ApiServices = keyof typeof api;
-type ApiMethods<T extends ApiServices> = keyof (typeof api)[T];
 
 interface QueueItem<T extends ApiServices = ApiServices> {
 	service: T;
-	type:"scan";
+	type: "scan";
 	data: any;
 	timestamp: string;
 }
@@ -37,7 +36,13 @@ export function createOfflineQueue() {
 			const newQueue = [];
 			for (const item of queue) {
 				try {
-					await api.shipments.scan(item.data.statusId, item.data.hbl, item.data.timestamp, item.data.lat, item.data.loc);
+					await api.shipments.scan(
+						item.data.statusId,
+						item.data.hbl,
+						item.data.timestamp,
+						item.data.lat,
+						item.data.loc,
+					);
 				} catch (error) {
 					newQueue.push(item);
 				}
