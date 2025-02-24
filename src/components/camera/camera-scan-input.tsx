@@ -36,13 +36,13 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 			}
 		},
 		constraints,
-		timeBetweenDecodingAttempts: 300,
+		timeBetweenDecodingAttempts: 100,
 	});
 
 	return (
 		<div>
-			<div className="flex h-[33vh] flex-col gap-4">
-				<video ref={ref} className="w-full h-full object-cover" autoPlay playsInline />
+			<div className=" h-[33vh] ">
+				<video ref={ref} className="w-full h-full  object-cover" autoPlay playsInline />
 			</div>
 		</div>
 	);

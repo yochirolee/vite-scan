@@ -16,7 +16,7 @@ export default function AppRouter() {
 					<Route path="*" element={<Navigate to="/" />} />
 				</>
 			) : (
-				<Route path="/login" element={<LoginPage />} />
+				<Route path="/" element={<LoginPage />} />
 			)}
 			{/* always redirect to login if no token */}
 			<Route path="*" element={<Navigate to="/login" />} />

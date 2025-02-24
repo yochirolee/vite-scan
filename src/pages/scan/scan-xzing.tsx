@@ -117,11 +117,10 @@ export const ScanXzing = () => {
 		});
 	}; */
 
-	const {
-		mutate: scanShipment,
-		isPending: isLoadingScanShipment,
-		isError: isErrorScanShipment,
-	} = useScanShipment(hbl, parseInt(statusId || "0"));
+	const { mutate: scanShipment, isPending: isLoadingScanShipment } = useScanShipment(
+		hbl,
+		parseInt(statusId || "0"),
+	);
 
 	// Memoize the shipment validation check
 	const isShipmentScanned = useCallback(
@@ -146,27 +145,26 @@ export const ScanXzing = () => {
 	);
 
 	return (
-		<div className="relative px-4 flex flex-col h-dvh">
-			<div className="sticky  top-0 ">
+		<div className="relative px-4 flex flex-col ">
+			<div >
 				{cameraMode ? (
 					<CameraScan isLoading={isLoadingScanShipment} onScan={handleScan} />
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}
 				{isLoadingScanShipment && <Loader />}
-				{isErrorScanShipment && <div>Error al escanear el HBL</div>}
 			</div>
 			<div className="flex items-center mt-2 justify-end">
 				<div className="flex items-center gap-2">
 					<span className="text-xs mx-2">
 						Total:
 						<Badge variant="outline" className="text-xs mx-2">
-							{scannedShipments?.length}
+							{scannedShipments?.length ? scannedShipments?.length : 0}
 						</Badge>
 					</span>
 				</div>
 			</div>
-			<div className="flex flex-col mb-10 space-y-1 flex-1 h-dvh">
+			<div className="flex flex-col mb-10 space-y-1 h-dvh">
 				<ScrollArea className="flex flex-col  pr-4   flex-1 min-h-0 h-full">
 					{isLoadingScannedShipments && <Loader />}
 					{isError && (
@@ -198,7 +196,7 @@ export const ScanXzing = () => {
 
 							<TooltipProvider>
 								<Tooltip>
-									<TooltipTrigger asChild>
+									<TooltipTrigger >
 										<ShipmentSheetDetails hbl={shipment?.hbl} />
 									</TooltipTrigger>
 									<TooltipContent>

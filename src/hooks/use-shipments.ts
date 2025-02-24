@@ -13,6 +13,7 @@ export const useGetScannedShipments = (statusId: number) => {
 
 export const useScanShipment = (hbl: string, statusId: number) => {
 	const location = useGeolocation();
+	
 	const queryClient = useQueryClient();
 	const timestamp = new Date();
 
