@@ -2,7 +2,6 @@ import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
 import { useSound } from "use-sound";
 import scanSound from "../../success-beep.mp3";
-import { useEffect, useState } from "react";
 
 const constraints: MediaStreamConstraints = {
 	audio: false,
@@ -21,26 +20,6 @@ interface CameraScanProps {
 }
 
 export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element => {
-	const [isOnline, setIsOnline] = useState(navigator.onLine);
-	const [hasPermission, setHasPermission] = useState(false);
-
-	useEffect(() => {
-		const handleOnlineStatus = () => setIsOnline(navigator.onLine);
-		window.addEventListener("online", handleOnlineStatus);
-		window.addEventListener("offline", handleOnlineStatus);
-
-		// Check camera permission
-		navigator.mediaDevices
-			.getUserMedia({ video: true })
-			.then(() => setHasPermission(true))
-			.catch(() => setHasPermission(false));
-
-		return () => {
-			window.removeEventListener("online", handleOnlineStatus);
-			window.removeEventListener("offline", handleOnlineStatus);
-		};
-	}, []);
-
 	const { devices } = useMediaDevices({
 		constraints,
 	});
@@ -59,31 +38,6 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 		constraints,
 		timeBetweenDecodingAttempts: 100,
 	});
-
-	if (!isOnline) {
-		return (
-			<div className="flex flex-col items-center justify-center p-4">
-				<p className="text-red-500">You are currently offline</p>
-				<p>Some features may be limited</p>
-			</div>
-		);
-	}
-
-	if (!hasPermission) {
-		return (
-			<div className="flex flex-col items-center justify-center p-4">
-				<p className="text-red-500">Camera permission is required</p>
-				<button
-					className="mt-2 px-4 py-2 bg-primary text-white rounded"
-					onClick={() => {
-						navigator.mediaDevices.getUserMedia({ video: true }).then(() => setHasPermission(true));
-					}}
-				>
-					Grant Permission
-				</button>
-			</div>
-		);
-	}
 
 	return (
 		<div>

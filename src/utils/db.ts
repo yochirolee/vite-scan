@@ -1,5 +1,5 @@
 import { openDB } from "idb";
-import type { Shipment } from "@/types";
+import type { Shipment } from "@/types/index";
 
 const dbName = "package-tracker-db";
 const dbVersion = 1;
