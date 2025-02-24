@@ -103,7 +103,6 @@ const api = {
 
 		scanned: async (statusId: number) => {
 			const response = await axiosInstance.get(`/shipments/scanned/${statusId}`);
-			console.log(response.data, "response.data on api scanned");
 			return response.data;
 		},
 		scan: async (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CameraScan } from "@/components/camera/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
@@ -36,14 +36,15 @@ interface Shipment {
 export const ScanXzing = () => {
 	const { cameraMode } = useAppContext();
 	const [hbl, setHbl] = useState("");
-	const { id } = useParams();
+	const { id: statusId } = useParams();
+
 	/* const [isLoading, setIsLoading] = useState(false);
 	const [shipments, setShipments] = useState<Shipment[]>([]);
 	 */ const {
 		data: scannedShipments,
 		isLoading: isLoadingScannedShipments,
 		isError,
-	} = useGetScannedShipments(parseInt(id || "0"));
+	} = useGetScannedShipments(parseInt(statusId || "0"));
 
 	console.log(scannedShipments);
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
@@ -117,10 +118,11 @@ export const ScanXzing = () => {
 		});
 	}; */
 
-	const { mutate: scanShipment, isPending: isLoadingScanShipment, isError: isErrorScanShipment } = useScanShipment(
-		hbl,
-		parseInt(id || "0"),
-	);
+	const {
+		mutate: scanShipment,
+		isPending: isLoadingScanShipment,
+		isError: isErrorScanShipment,
+	} = useScanShipment(hbl, parseInt(statusId || "0"));
 
 	const handleScan = (value: string) => {
 		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
@@ -144,8 +146,18 @@ export const ScanXzing = () => {
 				{isLoadingScanShipment && <Loader />}
 				{isErrorScanShipment && <div>Error al escanear el HBL</div>}
 			</div>
-			<div className="flex flex-col mb-10 space-y-1 flex-1 min-h-0 h-full">
-				<ScrollArea className="flex flex-col my-4 pr-4   flex-1 min-h-0 h-full">
+			<div className="flex items-center mt-2 justify-end">
+				<div className="flex items-center gap-2">
+					<span className="text-xs mx-2">
+						Total:
+						<Badge variant="outline" className="text-xs mx-2">
+							{scannedShipments?.length}
+						</Badge>
+					</span>
+				</div>
+			</div>
+			<div className="flex flex-col mb-10 space-y-1 flex-1 h-dvh">
+				<ScrollArea className="flex flex-col  pr-4   flex-1 min-h-0 h-full">
 					{isLoadingScannedShipments && <Loader />}
 					{isError && (
 						<div className="absolute inset-0 flex items-center justify-center">
@@ -159,19 +171,19 @@ export const ScanXzing = () => {
 						>
 							<div className="flex flex-col w-full gap-2">
 								<div className="flex items-center gap-2 justify-between w-full">
-									<div>
-										<span className="font-bold">{shipment?.hbl} </span>
-										<Badge variant="outline" className="text-xs mx-2">
-											{shipment?.invoiceId}
-										</Badge>
-									</div>
-									<div className="text-xs justify-end ">
+									<span className="font-bold">{shipment?.hbl} </span>
+									<Badge variant="outline" className="text-xs mx-2">
+										{shipment?.invoiceId}
+									</Badge>
+
+									<div className="text-xs shrink-0 justify-end ">
 										{shipment?.timestamp ? formatDate(shipment.timestamp) : ""}
 									</div>
 								</div>
-
-								<div>{shipment?.agency?.name}</div>
-								<div>{shipment?.description}</div>
+								<div className="flex flex-col gap-2">
+									<div>{shipment?.agency?.name}</div>
+									<div>{shipment?.description}</div>
+								</div>
 							</div>
 
 							<TooltipProvider>

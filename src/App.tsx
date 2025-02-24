@@ -6,13 +6,14 @@ import { ThemeProvider } from "./context/theme-context";
 import { Toaster } from "sonner";
 import Layout from "./layout/app-layout";
 import { AppProvider } from "./context/app-context";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			refetchOnWindowFocus: true,
-			refetchOnMount: false,
-			refetchOnReconnect: false,
-			staleTime: 5 * 60 * 1000, // 5 m
+			refetchOnMount: true,
+			refetchOnReconnect: true,
 			retry: true,
 		},
 	},
@@ -24,6 +25,7 @@ function App() {
 			<ThemeProvider defaultTheme="system" storageKey="theme">
 				<BrowserRouter>
 					<QueryClientProvider client={queryClient}>
+						<ReactQueryDevtools initialIsOpen={true} />
 						<AuthProvider>
 							<AppProvider>
 								<Layout>
