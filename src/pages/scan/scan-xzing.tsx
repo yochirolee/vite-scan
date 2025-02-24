@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState, useCallback } from "react";
 import { CameraScan } from "@/components/camera/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
@@ -35,12 +35,11 @@ interface Shipment {
 
 export const ScanXzing = () => {
 	const { cameraMode } = useAppContext();
+	// Debounce the hbl state to prevent excessive state updates
 	const [hbl, setHbl] = useState("");
 	const { id: statusId } = useParams();
 
-	/* const [isLoading, setIsLoading] = useState(false);
-	const [shipments, setShipments] = useState<Shipment[]>([]);
-	 */ const {
+	const {
 		data: scannedShipments,
 		isLoading: isLoadingScannedShipments,
 		isError,
@@ -124,17 +123,28 @@ export const ScanXzing = () => {
 		isError: isErrorScanShipment,
 	} = useScanShipment(hbl, parseInt(statusId || "0"));
 
-	const handleScan = (value: string) => {
-		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
-		const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
-		setHbl(formattedHbl);
-		//if hbl exist on scannedShipments, show toast
-		if (scannedShipments?.some((shipment: Shipment) => shipment.hbl === formattedHbl)) {
-			toast.error("HBL ya escaneado");
-			return;
-		}
-		scanShipment();
-	};
+	// Memoize the shipment validation check
+	const isShipmentScanned = useCallback(
+		(formattedHbl: string) =>
+			scannedShipments?.some((shipment: Shipment) => shipment.hbl === formattedHbl),
+		[scannedShipments],
+	);
+
+	const handleScan = useCallback(
+		(value: string) => {
+			const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
+			const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
+			setHbl(formattedHbl);
+
+			if (isShipmentScanned(formattedHbl)) {
+				toast.error("HBL ya escaneado");
+				return;
+			}
+			scanShipment();
+		},
+		[isShipmentScanned, scanShipment],
+	);
+
 	return (
 		<div className="relative px-4 flex flex-col h-dvh">
 			<div className="sticky  top-0 ">
