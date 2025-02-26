@@ -36,7 +36,7 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 			}
 		},
 		constraints,
-		timeBetweenDecodingAttempts: 100,
+		timeBetweenDecodingAttempts: 300,
 	});
 
 	return (

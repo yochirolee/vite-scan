@@ -11,17 +11,17 @@ export const useGetScannedShipments = (statusId: number) => {
 	});
 };
 
-export const useScanShipment = (hbl: string, statusId: number) => {
+export const useScanShipment = () => {
 	const location = useGeolocation();
 	
 	const queryClient = useQueryClient();
 	const timestamp = new Date();
 
 	return useMutation({
-		mutationFn: () =>
+		mutationFn: ({ hbl, statusId }: { hbl: string; statusId: number }) =>
 			api.shipments.scan(hbl, statusId, timestamp, location?.latitude, location?.longitude),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["scanned-shipments", statusId] });
+			queryClient.invalidateQueries({ queryKey: ["scanned-shipments"] });
 			toast.success("HBL escaneado correctamente", {
 				description: "El HBL ha sido escaneado correctamente",
 			});

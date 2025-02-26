@@ -36,16 +36,13 @@ interface Shipment {
 export const ScanXzing = () => {
 	const { cameraMode } = useAppContext();
 	// Debounce the hbl state to prevent excessive state updates
-	const [hbl, setHbl] = useState("");
-	const { id: statusId } = useParams();
-
+	const { action } = useParams();
 	const {
 		data: scannedShipments,
 		isLoading: isLoadingScannedShipments,
 		isError,
-	} = useGetScannedShipments(parseInt(statusId || "0"));
+	} = useGetScannedShipments(parseInt(action || "0"));
 
-	console.log(scannedShipments);
 	/* const { data: shipments, isLoading, isError } = useGetScannedShipments(hbl);
 
 	console.log(shipments); */
@@ -117,11 +114,7 @@ export const ScanXzing = () => {
 		});
 	}; */
 
-	const { mutate: scanShipment, isPending: isLoadingScanShipment } = useScanShipment(
-		hbl,
-		parseInt(statusId || "0"),
-	);
-
+	const mutation = useScanShipment();
 	// Memoize the shipment validation check
 	const isShipmentScanned = useCallback(
 		(formattedHbl: string) =>
@@ -133,26 +126,28 @@ export const ScanXzing = () => {
 		(value: string) => {
 			const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
 			const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
-			setHbl(formattedHbl);
 
 			if (isShipmentScanned(formattedHbl)) {
 				toast.error("HBL ya escaneado");
 				return;
 			}
-			scanShipment();
+			mutation.mutate({
+				hbl: formattedHbl,
+				statusId: parseInt(action || "0"),
+			});
 		},
-		[isShipmentScanned, scanShipment],
+		[isShipmentScanned, mutation],
 	);
 
 	return (
 		<div className="relative px-4 flex flex-col ">
-			<div >
+			<div>
 				{cameraMode ? (
-					<CameraScan isLoading={isLoadingScanShipment} onScan={handleScan} />
+					<CameraScan isLoading={mutation.isPending} onScan={handleScan} />
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}
-				{isLoadingScanShipment && <Loader />}
+				{mutation.isPending && <Loader />}
 			</div>
 			<div className="flex items-center mt-2 justify-end">
 				<div className="flex items-center gap-2">
@@ -196,7 +191,7 @@ export const ScanXzing = () => {
 
 							<TooltipProvider>
 								<Tooltip>
-									<TooltipTrigger >
+									<TooltipTrigger>
 										<ShipmentSheetDetails hbl={shipment?.hbl} />
 									</TooltipTrigger>
 									<TooltipContent>

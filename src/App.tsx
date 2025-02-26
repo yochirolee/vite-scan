@@ -4,17 +4,17 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/auth-context";
 import { ThemeProvider } from "./context/theme-context";
 import { Toaster } from "sonner";
-import Layout from "./layout/app-layout";
 import { AppProvider } from "./context/app-context";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
+			// Reduce staleTime to refresh more frequently
+			staleTime: 0,
 			refetchOnWindowFocus: true,
 			refetchOnMount: true,
 			refetchOnReconnect: true,
-			retry: true,
 		},
 	},
 });
@@ -28,10 +28,8 @@ function App() {
 						<ReactQueryDevtools initialIsOpen={true} />
 						<AuthProvider>
 							<AppProvider>
-								<Layout>
-									<AppRouter />
-									<Toaster />
-								</Layout>
+								<AppRouter />
+								<Toaster />
 							</AppProvider>
 						</AuthProvider>
 					</QueryClientProvider>

@@ -1,23 +1,15 @@
 import { Button } from "@/components/ui/button";
 
-import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronRight } from "lucide-react";
 import ShipmentDetails from "./shipment-details";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-
-
 export default function ShipmentSheetDetails({ hbl }: { hbl: string }) {
 	return (
 		<Sheet>
-			<SheetTrigger asChild>
+			<SheetTrigger>
 				<Button variant="ghost" size="icon">
 					<ChevronRight className="h-4 w-4 text-sky-600" />
 				</Button>
