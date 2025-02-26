@@ -1,3 +1,7 @@
+/// <reference lib="webworker" />
+
+declare const self: ServiceWorkerGlobalScope;
+
 const CACHE_NAME = "package-tracker-v1";
 const urlsToCache = [
 	"/",
@@ -7,19 +11,29 @@ const urlsToCache = [
 	// Add other static assets here
 ];
 
-self.addEventListener("install", (event: ExtendableEvent) => {
-	event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
+self.addEventListener("install", (event) => {
+	event.waitUntil(
+		caches.open(CACHE_NAME).then((cache) => {
+			return cache.addAll(urlsToCache).catch((error) => {
+				console.error('Cache addAll failed:', error);
+				// Continue with installation even if caching fails
+				return [];
+			});
+		})
+	);
 });
 
-self.addEventListener("fetch", (event: FetchEvent) => {
+self.addEventListener("fetch", (event) => {
 	event.respondWith(
-		caches.match(event.request).then((response) => {
-			// Cache hit - return response
-			if (response) {
-				return response;
-			}
-			return fetch(event.request);
-		}),
+		caches.match(event.request)
+			.then((response) => response || fetch(event.request))
+			.catch(() => {
+				// Return a fallback response or handle offline case
+				if (event.request.mode === 'navigate') {
+					return caches.match('/index.html');
+				}
+				return new Response('Offline');
+			})
 	);
 });
 
