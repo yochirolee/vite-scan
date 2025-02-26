@@ -44,11 +44,23 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 		timeBetweenDecodingAttempts: 600,
 	});
 
+	const handleTorchToggle = async () => {
+		try {
+			if (isTorchOn) {
+				await torchOff();
+			} else {
+				await torchOn();
+			}
+		} catch (error) {
+			console.error("Failed to toggle torch:", error);
+		}
+	};
+
 	return (
 		<div className=" relative h-[33vh] rounded-md overflow-hidden">
 			<video ref={ref} className="w-full h-full  object-cover" autoPlay playsInline />
 			<div className="absolute inline-flex items-center gap-2 bottom-2 z-10 right-2">
-				<Button variant="ghost" size="icon" onClick={() => (isTorchOn ? torchOff() : torchOn())}>
+				<Button variant="ghost" size="icon" onClick={handleTorchToggle}>
 					{isTorchAvailable ? (
 						<Lightbulb className="w-4 h-4" />
 					) : (

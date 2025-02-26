@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
 function App() {
 	return (
 		<div className="max-w-md mx-auto">
-			<ThemeProvider defaultTheme="system" storageKey="theme">
+			<ThemeProvider defaultTheme="dark" storageKey="theme">
 				<BrowserRouter>
 					<QueryClientProvider client={queryClient}>
 						<ReactQueryDevtools initialIsOpen={true} />
