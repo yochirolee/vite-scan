@@ -2,7 +2,8 @@ import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
 import { useSound } from "use-sound";
 import scanSound from "../../success-beep.mp3";
-
+import { Lightbulb, LightbulbOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 const constraints: MediaStreamConstraints = {
 	audio: false,
 	video: {
@@ -27,7 +28,10 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 
 	const deviceId = devices?.[0]?.deviceId;
 
-	const { ref } = useZxing({
+	const {
+		ref,
+		torch: { on: torchOn, off: torchOff, isOn: isTorchOn, isAvailable: isTorchAvailable },
+	} = useZxing({
 		deviceId: deviceId,
 		onDecodeResult: (result) => {
 			if (!isLoading) {
@@ -35,14 +39,22 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 				play();
 			}
 		},
+
 		constraints,
-		timeBetweenDecodingAttempts: 300,
+		timeBetweenDecodingAttempts: 600,
 	});
 
 	return (
-		<div>
-			<div className=" h-[33vh] ">
-				<video ref={ref} className="w-full h-full  object-cover" autoPlay playsInline />
+		<div className=" relative h-[33vh] rounded-md overflow-hidden">
+			<video ref={ref} className="w-full h-full  object-cover" autoPlay playsInline />
+			<div className="absolute inline-flex items-center gap-2 bottom-2 z-10 right-2">
+				<Button variant="ghost" size="icon" onClick={() => (isTorchOn ? torchOff() : torchOn())}>
+					{isTorchAvailable ? (
+						<Lightbulb className="w-4 h-4" />
+					) : (
+						<LightbulbOff className="w-4 h-4 text-muted-foreground" />
+					)}
+				</Button>
 			</div>
 		</div>
 	);

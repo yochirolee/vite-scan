@@ -10,9 +10,7 @@ export default function ShipmentSheetDetails({ hbl }: { hbl: string }) {
 	return (
 		<Sheet>
 			<SheetTrigger>
-				<Button variant="ghost" size="icon">
-					<ChevronRight className="h-4 w-4 text-sky-600" />
-				</Button>
+				<ChevronRight className="h-4 w-4 m-2 text-sky-600" />
 			</SheetTrigger>
 			<SheetContent className="m-0 text p-0 w-full lg:max-w-[450px]">
 				<SheetHeader className="p-4 flex  text-center">
