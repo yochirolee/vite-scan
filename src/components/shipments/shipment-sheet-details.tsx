@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronRight } from "lucide-react";
 import ShipmentDetails from "./shipment-details";
