@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { CameraScan } from "@/components/camera/camera-scan-input";
 import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
 import { Loader } from "@/components/common/loader";
 import { useAppContext } from "@/context/app-context";
+import CameraScanInputNimiq from "@/components/camera/camera-scan2-input";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -115,35 +116,34 @@ export const ScanXzing = () => {
 	}; */
 
 	const mutation = useScanShipment();
-	// Memoize the shipment validation check
-	const isShipmentScanned = useCallback(
-		(formattedHbl: string) =>
-			scannedShipments?.some((shipment: Shipment) => shipment.hbl === formattedHbl),
-		[scannedShipments],
-	);
 
-	const handleScan = useCallback(
-		(value: string) => {
-			const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
-			const formattedHbl = hblNumber?.trim().toUpperCase() ?? "";
+	const handleScan = (value: string) => {
+		const hblNumber = value.startsWith("CTE") ? value : value.split(",")[1];
+		const formattedHbl = hblNumber?.trim() ?? null;
 
-			if (isShipmentScanned(formattedHbl)) {
-				toast.error("HBL ya escaneado");
-				return;
-			}
+		if (!formattedHbl) {
+			toast.error("HBL inválido");
+			return;
+		}
+		//if not in scannedShipments, show toast
+		if (scannedShipments?.some((shipment: Shipment) => shipment.hbl === formattedHbl)) {
+			toast.error("HBL  escaneado");
+			return;
+		}
+
+		if (formattedHbl) {
 			mutation.mutate({
 				hbl: formattedHbl,
 				statusId: parseInt(action || "0"),
 			});
-		},
-		[isShipmentScanned, mutation],
-	);
+		}
+	};
 
 	return (
 		<div className="relative px-4 flex flex-col ">
 			<div>
 				{cameraMode ? (
-					<CameraScan isLoading={mutation.isPending} onScan={handleScan} />
+					<CameraScanInputNimiq handleScan={handleScan} isPending={mutation.isPending} />
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}
