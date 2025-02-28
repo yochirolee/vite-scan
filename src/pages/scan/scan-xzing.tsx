@@ -12,7 +12,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
 import { Loader } from "@/components/common/loader";
 import { useAppContext } from "@/context/app-context";
-import CameraScanInputNimiq from "@/components/camera/camera-scan2-input";
+import { CameraScan } from "@/components/camera/camera-scan-input";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -142,7 +142,7 @@ export const ScanXzing = () => {
 		<div className="relative px-4 flex flex-col ">
 			<div>
 				{cameraMode ? (
-					<CameraScanInputNimiq handleScan={handleScan} isPending={mutation.isPending} />
+					<CameraScan onScan={handleScan} isLoading={mutation.isPending} />
 				) : (
 					<HblScanner handleScan={handleScan} />
 				)}

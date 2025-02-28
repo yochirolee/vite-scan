@@ -8,9 +8,9 @@ const constraints: MediaStreamConstraints = {
 	audio: false,
 	video: {
 		facingMode: "environment",
-		width: { ideal: 1280 },
-		height: { ideal: 720 },
-		aspectRatio: { ideal: 1.777777778 },
+		width: { ideal: 1920, min: 640 },
+		height: { ideal: 1080, min: 480 },
+		aspectRatio: 1.777777778,
 		frameRate: { ideal: 30 },
 	},
 };
@@ -41,7 +41,7 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 		},
 
 		constraints,
-		timeBetweenDecodingAttempts: 600,
+		timeBetweenDecodingAttempts: 200,
 	});
 
 	const handleTorchToggle = async () => {
