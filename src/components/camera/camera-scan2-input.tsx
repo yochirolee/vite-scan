@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Lightbulb, LightbulbOff, Loader2 } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Loader2 } from "lucide-react";
 import QrScanner from "qr-scanner";
-import { Button } from "../ui/button";
 import useSound from "use-sound";
 import scanSound from "../../success-beep.mp3";
 // Rules applied: TypeScript Usage, Functional Programming
@@ -15,8 +14,6 @@ export default function CameraScanInputNimiq({
 }) {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	let qrScanner: QrScanner | null = null;
-	const [isTorchOn, setIsTorchOn] = useState<boolean>(false);
-	const [isTorchAvailable, setIsTorchAvailable] = useState<boolean>(false);
 	const [play] = useSound(scanSound);
 
 	useEffect(() => {
@@ -35,7 +32,7 @@ export default function CameraScanInputNimiq({
 				maxScansPerSecond: 1,
 			},
 		);
-		
+
 		qrScanner.start();
 
 		return () => {
@@ -43,13 +40,13 @@ export default function CameraScanInputNimiq({
 		};
 	}, []);
 
-	const handleTorchToggle = async () => {
+	/* 	const handleTorchToggle = async () => {
 		try {
 			await qrScanner?.toggleFlash();
 		} catch (error) {
 			console.error("Failed to toggle torch:", error);
 		}
-	};
+	}; */
 
 	return (
 		<div className="relative h-[33vh] rounded-md overflow-hidden">
@@ -62,13 +59,13 @@ export default function CameraScanInputNimiq({
 			)}
 
 			<div className="absolute inline-flex items-center gap-2 bottom-2 z-10 right-2">
-				<Button variant="ghost" size="icon" onClick={handleTorchToggle}>
-					{isTorchAvailable ? (
+				{/* 	<Button variant="ghost" size="icon" onClick={handleTorchToggle}>
+					{qrScanner?.isFlashOn() ? (
 						<Lightbulb className="w-4 h-4" />
 					) : (
 						<LightbulbOff className="w-4 h-4 text-muted-foreground" />
 					)}
-				</Button>
+				</Button> */}
 			</div>
 		</div>
 	);
