@@ -39,7 +39,6 @@ interface Shipment {
 
 export const ScanXzing = () => {
 	const { cameraMode } = useAppContext();	
-	const [play] = useSound(scanSound);
 	const [playError] = useSound(errorSound);
 	// Debounce the hbl state to prevent excessive state updates
 	const { action } = useParams();
@@ -143,7 +142,7 @@ export const ScanXzing = () => {
 				hbl: formattedHbl,
 				statusId: parseInt(action || "0"),
 			});
-			
+
 		}
 	};
 
