@@ -7,13 +7,12 @@ export const useGetScannedShipments = (statusId: number) => {
 	return useQuery({
 		queryKey: ["scanned-shipments", statusId],
 		queryFn: () => api.shipments.scanned(statusId),
-		enabled: !!statusId,
 	});
 };
 
 export const useScanShipment = () => {
 	const location = useGeolocation();
-	
+
 	const queryClient = useQueryClient();
 	const timestamp = new Date();
 

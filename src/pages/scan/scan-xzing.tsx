@@ -154,6 +154,10 @@ export const ScanXzing = () => {
 				{mutation.isPending && <Loader />}
 			</div>
 			<div className="flex items-center mt-2 justify-end">
+				{true && <div className="w-4 h-4 text-blue-400 animate-spin" />}
+				<p>
+					<div className="w-4 h-4 text-blue-400 animate-spin" />
+				</p>
 				<div className="flex items-center gap-2">
 					<span className="text-xs mx-2">
 						Total:
@@ -165,7 +169,6 @@ export const ScanXzing = () => {
 			</div>
 			<div className="flex flex-col mb-10 space-y-1 h-dvh">
 				<ScrollArea className="flex flex-col  pr-4   flex-1 min-h-0 h-full">
-					{isLoadingScannedShipments && <Loader />}
 					{isError && (
 						<div className="absolute inset-0 flex items-center justify-center">
 							<AlertCircle className="w-4 h-4 animate-spin" />
