@@ -11,11 +11,26 @@ export default defineConfig({
 			srcDir: "src",
 			filename: "service-worker.ts",
 			registerType: "autoUpdate",
+			injectRegister: "auto",
 			manifest: {
-				// your manifest configuration
+				name: "Your App Name",
+				short_name: "App",
+				start_url: "/",
+				display: "standalone",
+				background_color: "#ffffff",
+				theme_color: "#000000",
+				icons: [
+					// Add your icons here
+				],
 			},
 			injectManifest: {
 				injectionPoint: undefined,
+				rollupFormat: "iife",
+				maximumFileSizeToCacheInBytes: 5000000,
+			},
+			devOptions: {
+				enabled: true,
+				type: "module",
 			},
 		}),
 	],
@@ -23,5 +38,8 @@ export default defineConfig({
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
 		},
+	},
+	build: {
+		sourcemap: true,
 	},
 });

@@ -10,14 +10,14 @@ createRoot(document.getElementById("root")!).render(
 );
 
 if ("serviceWorker" in navigator) {
-	window.addEventListener("load", () => {
-		navigator.serviceWorker
-			.register("/service-worker.js")
-			.then((registration) => {
-				console.log("SW registered:", registration);
-			})
-			.catch((error) => {
-				console.log("SW registration failed:", error);
+	window.addEventListener("load", async () => {
+		try {
+			const registration = await navigator.serviceWorker.register("/service-worker.js", {
+				type: "module",
 			});
+			console.log("SW registered:", registration);
+		} catch (error) {
+			console.error("SW registration failed:", error);
+		}
 	});
 }
