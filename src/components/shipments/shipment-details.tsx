@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useGetShipmentByHbl } from "@/hooks/use-shipments";
 import ShipmentTimeline from "./shipment-timeline";
-import { Loader } from "../common/loader";
 
 export default function ShipmentDetails({ hbl }: { hbl: string | undefined }) {
 	if (!hbl) return null;
@@ -20,9 +19,11 @@ export default function ShipmentDetails({ hbl }: { hbl: string | undefined }) {
 	return (
 		<div className="flex pb-4 flex-col gap-4">
 			{isError && <p>Error loading shipment</p>}
-			{isLoading && <Loader />}
+			{isLoading && (
+				<div className="flex justify-center items-center text-sm h-full">Loading shipment</div>
+			)}
 			{shipment && (
-				<div className="h-full">
+				<div>
 					<Card className="overflow-hidden border-none p-0 m-0">
 						<CardHeader className="flex flex-row justify-between items-start">
 							<div className="grid grid-cols-2 items-center  ">
@@ -78,7 +79,13 @@ export default function ShipmentDetails({ hbl }: { hbl: string | undefined }) {
 									<div className="flex items-center justify-between">
 										<dt className="text-muted-foreground">Phone</dt>
 										<dd>
-											<a href="tel:">+1{shipment?.sender?.mobile}</a>
+											<a
+												href={`https://wa.me/1${shipment?.sender?.mobile?.replace(/\D/g, "")}`}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												+1{shipment?.sender?.mobile}
+											</a>
 										</dd>
 									</div>
 								</dl>
@@ -99,7 +106,13 @@ export default function ShipmentDetails({ hbl }: { hbl: string | undefined }) {
 									<div className="flex items-center justify-between">
 										<dt className="text-muted-foreground">Phone</dt>
 										<dd>
-											<a href="tel:">+53{shipment?.receiver?.mobile}</a>
+											<a
+												href={`https://wa.me/53${shipment?.receiver?.mobile?.replace(/\D/g, "")}`}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												+53{shipment?.receiver?.mobile}
+											</a>
 										</dd>
 									</div>
 								</dl>

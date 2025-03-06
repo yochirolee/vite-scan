@@ -17,7 +17,7 @@ export default function AppRouter(): JSX.Element {
 						<Route path="*" element={<Navigate to="/" />} />
 					</Route>
 					<Route path="/login" element={<LoginPage />} />
-					<Route path="*" element={<Navigate to="/" replace />} />
+					<Route path="*" element={<Navigate to="/login" replace />} />
 				</Routes>
 			</Suspense>
 		</ErrorBoundary>

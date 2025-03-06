@@ -1,37 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-
-import { statuses } from "@/data/data";
-/* const actions = [
-	{
-		name: "Desagrupar",
-		icon: <Package />,
-		link: "/select",
-		action: {
-			name: "ungroup",
-			status: "pending",
-			locationId: 3,
-		},
-	},
-	{
-		name: "Recibir en Almacen",
-		icon: <Warehouse />,
-		link: "/warehouse",
-	},
-	{
-		name: "Dar Salida",
-		icon: <Truck />,
-		link: "/ship",
-	},
-]; */
+import { useAuthContext } from "@/context/auth-context";
+import { getStatusesByRole, Role } from "@/data/data";
+import { getIcon } from "@/components/common/getIcon";
 
 export default function MainPage() {
+	const { user } = useAuthContext();
+	
+	const statuses = getStatusesByRole(user?.role as Role);
 	return (
 		<div className="grid ">
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2 mt-4">
 				{statuses.map((status) => (
 					<Link key={status.id} to={status.link}>
-						<Button variant="outline" className="text-white w-full">
+						<Button variant="outline" className="w-full">
+							{getIcon(status.icon)}
 							{status.name}
 						</Button>
 					</Link>

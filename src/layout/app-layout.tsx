@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/common/mode-toggle";
 import { useAuthContext } from "@/context/auth-context";
@@ -13,11 +14,17 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { user, logout } = useAuthContext();
 	const { cameraMode, setCameraMode } = useAppContext();
 	const isOnline = useOnlineStatus();
 	const { action } = useParams<{ action: string }>();
+	console.log(user);
+
+	useEffect(() => {
+		setCameraMode(false);
+	}, [action]);
 
 	// Optional: Add type guard if you need to ensure id exists
 	const statusName = action
@@ -35,7 +42,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 								<ArrowLeft />
 							</Button>
 						)}
-						<div className="text-xs inline-flex items-center gap-2 text-muted-foreground">
+						<div
+							className={`text-xs inline-flex items-center gap-2 text-muted-foreground ${
+								action ? "text-primary " : "ml-2"
+							}`}
+						>
 							<div
 								className={`w-2 h-2 ring-1 ring-offset-1 ring-offset-background rounded-full ${
 									isOnline ? "bg-green-500" : "bg-red-500"
@@ -48,7 +59,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 							<span className="text-xs text-muted-foreground">{statusName}</span>
 						</div>
 					</div>
-					<div className="inline-flex items-center ">
+					<div className="inline-flex items-center  ">
 						{user && (
 							<>
 								{action && (
@@ -68,6 +79,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 										<DropdownMenuItem onClick={() => logout()}>
 											<LogOut />
 											<span>Log out</span>
+										</DropdownMenuItem>
+										<Separator />
+										<DropdownMenuItem>
+											<span className="text-xs">{user?.email}</span>
 										</DropdownMenuItem>
 									</DropdownMenuContent>
 								</DropdownMenu>
