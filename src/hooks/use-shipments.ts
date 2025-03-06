@@ -2,6 +2,9 @@ import { api } from "@/api/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { toast } from "sonner";
+import { useSound } from "use-sound";
+import scanSound from "../success-beep.mp3";
+import errorSound from "../error.mp3";
 
 export const useGetScannedShipments = (statusId: number) => {
 	return useQuery({
@@ -12,8 +15,16 @@ export const useGetScannedShipments = (statusId: number) => {
 };
 
 export const useScanShipment = () => {
+	const [play] = useSound(scanSound, {
+		preload: true,
+		interrupt: true,
+	});
+	const [playError] = useSound(errorSound, {
+		preload: true,
+		interrupt: true,
+	});
 	const location = useGeolocation();
-	
+
 	const queryClient = useQueryClient();
 	const timestamp = new Date();
 
@@ -21,12 +32,14 @@ export const useScanShipment = () => {
 		mutationFn: ({ hbl, statusId }: { hbl: string; statusId: number }) =>
 			api.shipments.scan(hbl, statusId, timestamp, location?.latitude, location?.longitude),
 		onSuccess: () => {
+			play();
 			queryClient.invalidateQueries({ queryKey: ["scanned-shipments"] });
 			toast.success("HBL escaneado correctamente", {
 				description: "El HBL ha sido escaneado correctamente",
 			});
 		},
 		onError: () => {
+			playError();
 			toast.error("Error al escanear el HBL", {
 				description: "Por favor, inténtelo de nuevo",
 			});

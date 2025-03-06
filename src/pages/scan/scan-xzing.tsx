@@ -13,6 +13,10 @@ import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details"
 import { Loader } from "@/components/common/loader";
 import { useAppContext } from "@/context/app-context";
 import { CameraScan } from "@/components/camera/camera-scan-input";
+import { useSound } from "use-sound";
+
+import scanSound from "../../success-beep.mp3";
+import errorSound from "../../error.mp3";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -34,7 +38,9 @@ interface Shipment {
 }
 
 export const ScanXzing = () => {
-	const { cameraMode } = useAppContext();
+	const { cameraMode } = useAppContext();	
+	const [play] = useSound(scanSound);
+	const [playError] = useSound(errorSound);
 	// Debounce the hbl state to prevent excessive state updates
 	const { action } = useParams();
 	const {
@@ -122,11 +128,13 @@ export const ScanXzing = () => {
 
 		if (!formattedHbl) {
 			toast.error("HBL inválido");
+			playError();
 			return;
 		}
 		//if not in scannedShipments, show toast
 		if (scannedShipments?.some((shipment: Shipment) => shipment.hbl === formattedHbl)) {
-			toast.error("HBL  escaneado");
+			toast.error("HBL ya escaneado");
+			playError();
 			return;
 		}
 
@@ -135,6 +143,7 @@ export const ScanXzing = () => {
 				hbl: formattedHbl,
 				statusId: parseInt(action || "0"),
 			});
+			
 		}
 	};
 
