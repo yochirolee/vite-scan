@@ -154,10 +154,7 @@ export const ScanXzing = () => {
 				{mutation.isPending && <Loader />}
 			</div>
 			<div className="flex items-center mt-2 justify-end">
-				{true && <div className="w-4 h-4 text-blue-400 animate-spin" />}
-				<p>
-					<div className="w-4 h-4 text-blue-400 animate-spin" />
-				</p>
+				{isLoadingScannedShipments && <div className="w-4 h-4 animate-spin" />}
 				<div className="flex items-center gap-2">
 					<span className="text-xs mx-2">
 						Total:
