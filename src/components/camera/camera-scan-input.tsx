@@ -1,7 +1,6 @@
 import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
 
-import scanSound from "../../success-beep.mp3";
 import { Lightbulb, LightbulbOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const constraints: MediaStreamConstraints = {
