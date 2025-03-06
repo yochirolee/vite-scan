@@ -1,6 +1,7 @@
 import { useZxing } from "react-zxing";
 import { useMediaDevices } from "react-media-devices";
-
+import { useSound } from "use-sound";
+import scanSound from "../../success-beep.mp3";
 import { Lightbulb, LightbulbOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const constraints: MediaStreamConstraints = {
@@ -23,7 +24,8 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 	const { devices } = useMediaDevices({
 		constraints,
 	});
-	
+	const [play] = useSound(scanSound);
+
 	const deviceId = devices?.[0]?.deviceId;
 
 	const {
@@ -34,12 +36,12 @@ export const CameraScan = ({ onScan, isLoading }: CameraScanProps): JSX.Element 
 		onDecodeResult: (result) => {
 			if (!isLoading) {
 				onScan(result.getText());
-				
+				play();
 			}
 		},
 
 		constraints,
-		timeBetweenDecodingAttempts: 200,
+		timeBetweenDecodingAttempts: 500,
 	});
 
 	const handleTorchToggle = async () => {
