@@ -11,9 +11,9 @@ export default function AppRouter(): JSX.Element {
 		<ErrorBoundary fallback={<div>Something went wrong</div>}>
 			<Suspense fallback={<div>Loading...</div>}>
 				<Routes>
-					<Route element={<ProtectedRoute />}>
-						<Route path="/" element={<MainPage />} />
-						<Route path="/scan/:action" element={<ScanXzing />} />
+					<Route path="/" element={<ProtectedRoute />}>
+						<Route index element={<MainPage />} />
+						<Route path="scan/:action" element={<ScanXzing />} />
 						<Route path="*" element={<Navigate to="/" />} />
 					</Route>
 					<Route path="/login" element={<LoginPage />} />
