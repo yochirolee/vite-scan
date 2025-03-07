@@ -144,7 +144,7 @@ export const ScanXzing = () => {
 	};
 
 	return (
-		<div className="relative px-4 flex flex-col ">
+		<div className=" px-4 flex flex-col ">
 			<div>
 				{cameraMode ? (
 					<CameraScan onScan={handleScan} isLoading={mutation.isPending} />
@@ -154,7 +154,7 @@ export const ScanXzing = () => {
 				{mutation.isPending && <Loader />}
 			</div>
 			<div className="flex items-center mt-2 justify-end">
-				{isLoadingScannedShipments && <div className="w-4 h-4 animate-spin" />}
+				{mutation.isPending && <div className="w-4 h-4 animate-spin" />}
 				<div className="flex items-center gap-2">
 					<span className="text-xs mx-2">
 						Total:

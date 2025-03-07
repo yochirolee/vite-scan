@@ -20,8 +20,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { cameraMode, setCameraMode } = useAppContext();
 	const isOnline = useOnlineStatus();
 	const { action } = useParams<{ action: string }>();
-	console.log(user);
-
+	
 	useEffect(() => {
 		setCameraMode(false);
 	}, [action]);
