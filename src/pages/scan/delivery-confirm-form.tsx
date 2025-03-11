@@ -9,10 +9,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { AlertCircle, Camera, Upload, Pen, RefreshCw, Package, CheckCircle2 } from "lucide-react";
+import { AlertCircle, Camera, Upload, Pen, RefreshCw, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 
@@ -57,7 +55,7 @@ export default function DeliveryConfirmationForm() {
 		}
 	}, []);
 
-	const handlePackageDetailsChange = (
+/* 	const handlePackageDetailsChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) => {
 		const { name, value } = e.target;
@@ -65,7 +63,7 @@ export default function DeliveryConfirmationForm() {
 			...prev,
 			[name]: value,
 		}));
-	};
+	}; */
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
