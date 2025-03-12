@@ -57,7 +57,7 @@ export const statuses: Status[] = [
 	{
 		id: 10,
 		name: "Entregar",
-		link: "/scan/10",
+		link: "/delivery",
 		allowedRoles: [Role.ROOT, Role.ADMINISTRATOR, Role.AGENCY_ADMIN, Role.DELIVERY_DRIVER],
 		icon: "DELIVERED",
 	},

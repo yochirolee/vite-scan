@@ -91,7 +91,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 				</div>
 			</nav>
 
-			<div className="container py-6 relative">{children}</div>
+			<div className="container py-2 relative">{children}</div>
 		</div>
 	);
 }

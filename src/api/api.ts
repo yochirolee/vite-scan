@@ -101,6 +101,42 @@ const api = {
 			return response.data;
 		},
 
+		// Get all shipments in an invoice once a hbl is scanned
+		getShipmentsInInvoice: async (hbl: string) => {
+			const STORAGE_KEY = "delivery-shipments";
+			const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]") as Array<{
+				hbl: string;
+				timestamp: string;
+				isScanned?: boolean;
+			}>;
+
+			const existingShipmentIndex = storedData.findIndex((shipment) => shipment.hbl === hbl);
+
+			if (existingShipmentIndex !== -1) {
+				storedData[existingShipmentIndex].isScanned = true;
+				storedData[existingShipmentIndex].timestamp = new Date().toISOString();
+				localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
+				return storedData;
+			}
+
+			if (hbl?.length > 6) {
+				const response = await axiosInstance.get(`/shipments/delivery/${hbl}`);
+				if (response.data.length > 0) {
+					const index = response.data.findIndex((shipment: any) => shipment.hbl === hbl);
+					if (index !== -1) {
+						response.data[index].isScanned = true;
+						response.data[index].timestamp = new Date().toISOString();
+					}
+					const updatedData = [...storedData, ...response.data];
+					localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
+					return updatedData;
+				}
+				
+			}
+
+			return storedData;
+		},
+
 		scanned: async (statusId: number) => {
 			const response = await axiosInstance.get(`/shipments/scanned/${statusId}`);
 			return response.data;

@@ -1,5 +1,6 @@
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -7,19 +8,53 @@ import {
 	CardDescription,
 	CardFooter,
 	CardHeader,
-	CardTitle,
+	
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Camera, Upload, Pen, RefreshCw, CheckCircle2 } from "lucide-react";
+import { AlertCircle, Camera, Upload, Pen, RefreshCw, CheckCircle2, UserPlus, Save } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function DeliveryConfirmationForm() {
+const FormSchema = z.object({
+	parcels: z.array(
+		z.object({
+			eventId: z.number().min(1, { message: "Event ID is required" }),
+			hbl: z.string().min(1, { message: "HBL is required" }),
+			invoiceId: z.number().min(1, { message: "Invoice ID is required" }),
+		}),
+	),
+	image: z.instanceof(File).optional(),
+	signature: z.instanceof(File).optional(),
+});
+
+type FormValues = z.infer<typeof FormSchema>;
+
+export default function DeliveryConfirmationForm({
+	open,
+	setOpen,
+}: {
+	open: boolean;
+	setOpen: (open: boolean) => void;
+}) {
 	// Package details state
 	const [packageDetails, setPackageDetails] = useState({
 		trackingNumber: "",
 		description: "",
 		quantity: "1",
+	});
+	const form = useForm<FormValues>({
+		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			parcels: [],
+			signature: undefined,
+			image: undefined,
+		},
 	});
 
 	// Photo state
@@ -42,6 +77,60 @@ export default function DeliveryConfirmationForm() {
 	const cameraInputRef = useRef<HTMLInputElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = form;
+
+	const onSubmit = async (data: FormValues) => {
+		console.log(data);
+		setIsUploading(true);
+		setUploadStatus(null);
+
+		try {
+			const formData = new FormData();
+
+			// Add form data
+			data.parcels.forEach((parcel, index) => {
+				formData.append(`parcels[${index}]`, JSON.stringify(parcel));
+			});
+
+			// Add photo if available
+			if (data.image) {
+				formData.append("image", data.image);
+			}
+
+			// Add signature if available
+			if (data.signature) {
+				formData.append("signature", data.signature);
+			}
+
+			// Replace with your actual API endpoint
+			const response = await fetch("https://your-api-endpoint.com/delivery-confirmation", {
+				method: "POST",
+				body: formData,
+			});
+
+			if (!response.ok) {
+				throw new Error(`Upload failed with status: ${response.status}`);
+			}
+
+			setUploadStatus({
+				success: true,
+				message: "Delivery confirmation submitted successfully!",
+			});
+		} catch (error) {
+			console.error("Upload error:", error);
+			setUploadStatus({
+				success: false,
+				message: error instanceof Error ? error.message : "Failed to submit delivery confirmation",
+			});
+		} finally {
+			setIsUploading(false);
+		}
+	};
+
 	// Initialize canvas when component mounts
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -55,7 +144,7 @@ export default function DeliveryConfirmationForm() {
 		}
 	}, []);
 
-/* 	const handlePackageDetailsChange = (
+	/* 	const handlePackageDetailsChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) => {
 		const { name, value } = e.target;
@@ -82,7 +171,7 @@ export default function DeliveryConfirmationForm() {
 		}
 	};
 
-	const handleUpload = async () => {
+	/* const handleUpload = async () => {
 		// Validate package details
 		if (!packageDetails.trackingNumber.trim()) {
 			setUploadStatus({
@@ -152,7 +241,7 @@ export default function DeliveryConfirmationForm() {
 		} finally {
 			setIsUploading(false);
 		}
-	};
+	}; */
 
 	const triggerFileInput = () => {
 		fileInputRef.current?.click();
@@ -224,154 +313,188 @@ export default function DeliveryConfirmationForm() {
 	};
 
 	return (
-		<div className="container mx-auto py-10 px-4">
-			<Card className="max-w-md mx-auto">
-				<CardHeader>
-					<CardTitle className="text-lg font-bold">Delivery Confirmation</CardTitle>
-					<CardDescription>
-						Confirm package delivery with details, photo, and signature
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-6">
-					{/* Photo Section */}
-					<div className="space-y-4">
-						<div className="flex items-center">
-							<Camera className="mr-2 h-4 w-4" />
-							<h3 className=" font-medium">Delivery Photo</h3>
-						</div>
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
+				<Button variant="outline" className="w-full " >
+					<Save className="w-4 h-4" />
+					<span >Finalizar Entrega</span>
+				</Button>
+			</DialogTrigger>
+			<DialogContent>
+				<DialogTitle>Delivery Confirmation</DialogTitle>
+				<ScrollArea className="h-[80vh]">
+					<Card className="border-none w-full ">
+						<CardHeader>
+							<CardDescription>
+								Confirm package delivery with details, photo, and signature
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-6">
+							{/* Photo Section */}
+							<Form {...form}>
+								<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+									<div className="space-y-4">
+										<div className="flex items-center">
+											<Camera className="mr-2 h-4 w-4" />
+											<h3 className=" font-medium">Delivery Photo</h3>
+										</div>
 
-						{preview ? (
-							<div className="aspect-video relative rounded-md overflow-hidden border">
-								<img
-									src={preview || "/placeholder.svg"}
-									alt="Delivery preview"
-									className="w-full h-full object-contain"
-								/>
-							</div>
-						) : (
-							<div className="aspect-video bg-muted flex items-center justify-center rounded-md border border-dashed">
-								<p className="text-sm text-muted-foreground">No photo selected</p>
-							</div>
-						)}
+										{preview ? (
+											<div className="aspect-video relative rounded-md overflow-hidden border">
+												<img
+													src={preview || "/placeholder.svg"}
+													alt="Delivery preview"
+													className="w-full h-full object-contain"
+												/>
+											</div>
+										) : (
+											<div className="aspect-video bg-muted flex items-center justify-center rounded-md border border-dashed">
+												<p className="text-sm text-muted-foreground">No photo selected</p>
+											</div>
+										)}
 
-						<div className="grid grid-cols-2 gap-4">
-							<Button
-								variant="outline"
-								className="w-full"
-								onClick={triggerCameraInput}
-								type="button"
-							>
-								<Camera className="mr-2 h-4 w-4" />
-								Take Photo
-							</Button>
-							<Button variant="outline" className="w-full" onClick={triggerFileInput} type="button">
-								<Upload className="mr-2 h-4 w-4" />
-								Upload File
-							</Button>
-						</div>
+										<div className="grid grid-cols-2 gap-4">
+											<Button
+												variant="outline"
+												className="w-full"
+												onClick={triggerCameraInput}
+												type="button"
+											>
+												<Camera className="mr-2 h-4 w-4" />
+												Take Photo
+											</Button>
+											<Button
+												variant="outline"
+												className="w-full"
+												onClick={triggerFileInput}
+												type="button"
+											>
+												<Upload className="mr-2 h-4 w-4" />
+												Upload File
+											</Button>
+										</div>
 
-						<input
-							type="file"
-							accept="image/*"
-							onChange={handleFileChange}
-							className="hidden"
-							ref={fileInputRef}
-						/>
+										<input
+											type="file"
+											accept="image/*"
+											onChange={handleFileChange}
+											className="hidden"
+											ref={fileInputRef}
+										/>
 
-						<input
-							type="file"
-							accept="image/*"
-							capture="environment"
-							onChange={handleFileChange}
-							className="hidden"
-							ref={cameraInputRef}
-						/>
-					</div>
-
-					<Separator />
-
-					{/* Signature Section */}
-					<div className="space-y-4">
-						<div className="flex items-center">
-							<Pen className="mr-2 h-4 w-4" />
-							<h3 className=" font-medium">Client Signature</h3>
-						</div>
-
-						{/* Package receipt confirmation */}
-						<div className="bg-muted p-3 rounded-md text-sm">
-							<p className="font-medium mb-1">Confirmation of Receipt</p>
-							<p>
-								I confirm that I have received the package with tracking number
-								<span className="font-semibold">
-									{" "}
-									{packageDetails.trackingNumber || "[Tracking Number]"}
-								</span>
-								{packageDetails.description && (
-									<span>
-										{" "}
-										described as:{" "}
-										<span className="font-semibold">{packageDetails.description}</span>
-									</span>
-								)}
-								{packageDetails.quantity && packageDetails.quantity !== "1" && (
-									<span>
-										{" "}
-										(Quantity: <span className="font-semibold">{packageDetails.quantity}</span>)
-									</span>
-								)}
-							</p>
-						</div>
-
-						<div className=" rounded-md p-1">
-							<Label htmlFor="signature-pad" className="text-sm text-muted-foreground mb-2 block">
-								Sign below to confirm receipt of package
-							</Label>
-							<div className="relative  rounded-md bg-white touch-none ">
-								<canvas
-									ref={canvasRef}
-									width={450}
-									height={150}
-									className="w-full h-[150px] cursor-crosshair touch-none"
-									onMouseDown={startDrawing}
-									onMouseMove={draw}
-									onMouseUp={stopDrawing}
-									onMouseLeave={stopDrawing}
-									onTouchStart={startDrawing}
-									onTouchMove={draw}
-									onTouchEnd={stopDrawing}
-								/>
-							</div>
-						</div>
-						<div className="flex justify-between items-center">
-							<div>
-								{signature && (
-									<div className="text-sm text-green-600 flex items-center">
-										<CheckCircle2 className="mr-1 h-4 w-4" />
-										Signature captured
+										<input
+											type="file"
+											accept="image/*"
+											capture="environment"
+											onChange={handleFileChange}
+											className="hidden"
+											ref={cameraInputRef}
+										/>
 									</div>
-								)}
-							</div>
-							<Button variant="outline" size="sm" onClick={clearSignature}>
-								<RefreshCw className="mr-2 h-4 w-4" />
-								Clear Signature
-							</Button>
-						</div>
-					</div>
 
-					{uploadStatus && (
-						<Alert variant={uploadStatus.success ? "default" : "destructive"}>
-							<AlertCircle className="h-4 w-4" />
-							<AlertTitle>{uploadStatus.success ? "Success" : "Error"}</AlertTitle>
-							<AlertDescription>{uploadStatus.message}</AlertDescription>
-						</Alert>
-					)}
-				</CardContent>
-				<CardFooter>
-					<Button className="w-full" onClick={handleUpload} disabled={isUploading}>
-						{isUploading ? "Submitting..." : "Confirm Delivery"}
-					</Button>
-				</CardFooter>
-			</Card>
-		</div>
+									<Separator />
+
+									{/* Signature Section */}
+									<div className="space-y-4 ">
+										<div className="flex items-center">
+											<Pen className="mr-2 h-4 w-4" />
+											<h3 className=" font-medium">Client Signature</h3>
+										</div>
+
+										{/* Package receipt confirmation */}
+										<div className="bg-muted p-3 rounded-md text-sm">
+											<p className="font-medium mb-1">Confirmation of Receipt</p>
+											<p>
+												I confirm that I have received the package with tracking number
+												<span className="font-semibold">
+													{" "}
+													{packageDetails.trackingNumber || "[Tracking Number]"}
+												</span>
+												{packageDetails.description && (
+													<span>
+														{" "}
+														described as:{" "}
+														<span className="font-semibold">{packageDetails.description}</span>
+													</span>
+												)}
+												{packageDetails.quantity && packageDetails.quantity !== "1" && (
+													<span>
+														{" "}
+														(Quantity:{" "}
+														<span className="font-semibold">{packageDetails.quantity}</span>)
+													</span>
+												)}
+											</p>
+										</div>
+
+										<FormField
+											control={form.control}
+											name="signature"
+											render={({ field }) => (
+												<FormItem className="border rounded-md p-1">
+													<Label
+														htmlFor="signature-pad"
+														className="text-sm text-muted-foreground mb-2 block"
+													>
+														Sign below to confirm receipt of package
+													</Label>
+													<div className="relative  rounded-md bg-white touch-none ">
+														<FormControl>
+															<canvas
+																{...field}
+																id="signature-pad"
+																ref={canvasRef}
+																width={450}
+																height={150}
+																className="w-full h-[150px] cursor-crosshair touch-none"
+																onMouseDown={startDrawing}
+																onMouseMove={draw}
+																onMouseUp={stopDrawing}
+																onMouseLeave={stopDrawing}
+																onTouchStart={startDrawing}
+																onTouchMove={draw}
+																onTouchEnd={stopDrawing}
+															/>
+														</FormControl>
+														<FormMessage />
+													</div>
+												</FormItem>
+											)}
+										/>
+
+										<div className="flex justify-between items-center">
+											<div>
+												{signature && (
+													<div className="text-sm text-green-600 flex items-center">
+														<CheckCircle2 className="mr-1 h-4 w-4" />
+														Signature captured
+													</div>
+												)}
+											</div>
+											<Button variant="outline" size="sm" onClick={clearSignature} type="button">
+												<RefreshCw className="mr-2 h-4 w-4" />
+												Clear Signature
+											</Button>
+										</div>
+									</div>
+
+									{uploadStatus && (
+										<Alert variant={uploadStatus.success ? "default" : "destructive"}>
+											<AlertCircle className="h-4 w-4" />
+											<AlertTitle>{uploadStatus.success ? "Success" : "Error"}</AlertTitle>
+											<AlertDescription>{uploadStatus.message}</AlertDescription>
+										</Alert>
+									)}
+									<Button className="w-full" type="submit" disabled={isUploading}>
+										{isUploading ? "Submitting..." : "Confirm Delivery"}
+									</Button>
+								</form>
+							</Form>
+						</CardContent>
+						<CardFooter></CardFooter>
+					</Card>
+				</ScrollArea>
+			</DialogContent>
+		</Dialog>
 	);
 }

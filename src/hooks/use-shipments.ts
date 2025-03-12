@@ -40,3 +40,11 @@ export const useGetShipmentByHbl = (hbl: string) => {
 		enabled: !!hbl,
 	});
 };
+
+export const useGetShipmentsInInvoice = (hbl: string) => {
+	return useQuery({
+		queryKey: ["getShipmentsInInvoice", hbl],
+		queryFn: () => api.shipments.getShipmentsInInvoice(hbl),
+		
+	});
+};
