@@ -71,9 +71,8 @@ export default function DeliveryConfirmationForm({
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const {
-		register,
 		handleSubmit,
-		formState: { errors },
+		formState: {},
 	} = form;
 
 	const onSubmit = async (data: FormValues) => {
