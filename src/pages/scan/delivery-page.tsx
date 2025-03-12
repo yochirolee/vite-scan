@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { AlertCircle, Camera, CheckCircle, Clock, MapPinCheck } from "lucide-react";
+import { AlertCircle, Camera, CheckCircle, Clock } from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Phone, IdCard } from "lucide-react";
+import DeliveryConfirmationForm from "./delivery-confirm-form";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,7 +12,7 @@ import { Loader } from "@/components/common/loader";
 import { formatTimestamp } from "@/utils/dateFormatter";
 
 export default function DeliveryPage() {
-	//const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(false);
 	const [hbl, setHbl] = useState("");
 	const { data: shipments, isLoading, isError } = useGetShipmentsInInvoice(hbl);
 
@@ -44,10 +44,10 @@ export default function DeliveryPage() {
 			) : (
 				<HBLScanner handleScan={handleScan} />
 			)}
-			<div className="container mx-auto p-2  m-4 rounded-lg ">
+			<div className="container mx-auto p-2 rounded-lg ">
 				<div className="flex  items-center dark:bg-gray-900 p-2 rounded-lg">
 					<div className="flex flex-col ml-2 w-full space-y-1 ">
-						<div className="flex items-center w-full justify-between pb-2 gap-2">
+						<div className="flex items-center w-full justify-between gap-2">
 							<p className="text-md pb-1  font-medium">Leidiana Torres Roca</p>
 							<div className="flex items-center gap-2">
 								<span className="text-sm font-medium">Scanned:</span>
@@ -59,7 +59,7 @@ export default function DeliveryPage() {
 								</Badge>
 							</div>
 						</div>
-
+						{/* 
 						<div className="flex flex-col gap-2 justify-start  ">
 							<div className="text-sm dark:text-gray-400 flex items-center gap-2		">
 								<Phone className="min-w-4 h-4 " />
@@ -75,18 +75,7 @@ export default function DeliveryPage() {
 									Calle 62 entre 23 y 25, No 2307 Apto 3, Buena Vista, La Habana, Cuba
 								</span>
 							</div>
-						</div>
-					</div>
-				</div>
-
-				<div className="flex items-center mt-2 justify-end pr-1 gap-4">
-					<div className="flex items-center gap-2">
-						<span className="text-sm font-medium dark:text-gray-400">Facturas:</span>
-						<span className="text-sm font-medium">0</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-sm font-medium dark:text-gray-400">Total de Paquetes:</span>
-						<span className="text-sm font-medium">{shipments?.length ? shipments?.length : 0}</span>
+						</div> */}
 					</div>
 				</div>
 
@@ -138,7 +127,7 @@ export default function DeliveryPage() {
 				<Button variant="outline" onClick={clearCache}>
 					Clear
 				</Button>
-				{/* <DeliveryConfirmationForm open={open} setOpen={setOpen} /> */}
+				<DeliveryConfirmationForm open={open} setOpen={setOpen} />
 			</div>
 		</div>
 	);
