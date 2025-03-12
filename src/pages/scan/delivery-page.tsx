@@ -19,7 +19,16 @@ export default function DeliveryPage() {
 	// Update shipments when shipmentsInInvoice changes, maintaining previous data
 
 	const handleScan = (hbl: string) => {
-		setHbl(hbl);
+		const hblNumber = hbl.startsWith("CTE") ? hbl : hbl.split(",")[1];
+		const formattedHbl = hblNumber?.trim() ?? null;
+		setHbl(formattedHbl);
+	};
+
+	console.log(hbl);
+
+	const clearCache = () => {
+		setHbl("");
+		localStorage.removeItem("delivery-shipments");
 	};
 
 	const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -43,7 +52,10 @@ export default function DeliveryPage() {
 							<div className="flex items-center gap-2">
 								<span className="text-sm font-medium">Scanned:</span>
 								<Badge variant="outline" className="bg-green-500 text-white">
-									<span className="text-sm font-medium">{shipments?.length}</span>
+									<span className="text-sm font-medium">
+										{shipments?.filter((shipment) => shipment?.isScanned)?.length}/
+										{shipments?.length}
+									</span>
 								</Badge>
 							</div>
 						</div>
@@ -123,6 +135,9 @@ export default function DeliveryPage() {
 				</ScrollArea>
 			</div>
 			<div className="absolute w-full bottom-0  ">
+				<Button variant="outline" onClick={clearCache}>
+					Clear
+				</Button>
 				{/* <DeliveryConfirmationForm open={open} setOpen={setOpen} /> */}
 			</div>
 		</div>
