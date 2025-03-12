@@ -2,16 +2,9 @@ import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Camera, Upload, Pen, RefreshCw, CheckCircle2, UserPlus, Save } from "lucide-react";
+import { AlertCircle, Camera, Upload, Pen, RefreshCw, CheckCircle2, Save } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { useForm } from "react-hook-form";
@@ -43,7 +36,7 @@ export default function DeliveryConfirmationForm({
 	setOpen: (open: boolean) => void;
 }) {
 	// Package details state
-	const [packageDetails, setPackageDetails] = useState({
+	const [packageDetails] = useState({
 		trackingNumber: "",
 		description: "",
 		quantity: "1",
@@ -170,6 +163,8 @@ export default function DeliveryConfirmationForm({
 			setUploadStatus(null);
 		}
 	};
+
+	console.log(image);
 
 	/* const handleUpload = async () => {
 		// Validate package details
@@ -315,9 +310,9 @@ export default function DeliveryConfirmationForm({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button variant="outline" className="w-full " >
+				<Button variant="outline" className="w-full ">
 					<Save className="w-4 h-4" />
-					<span >Finalizar Entrega</span>
+					<span>Finalizar Entrega</span>
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
