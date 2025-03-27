@@ -110,31 +110,46 @@ const api = {
 				isScanned?: boolean;
 			}>;
 
-			const existingShipmentIndex = storedData.findIndex((shipment) => shipment.hbl === hbl);
+			// First check if we have any stored data
+			if (storedData.length === 0 && hbl?.length > 6) {
+				// Only fetch from API if no stored data exists
+				const response = await axiosInstance.get(`/shipments/delivery/${hbl}`);
+				if (response.data.length > 0) {
+					const updatedData = response.data.map((shipment: any) => ({
+						...shipment,
+						isScanned: shipment.hbl === hbl,
+						timestamp: shipment.hbl === hbl ? new Date().toISOString() : shipment.timestamp,
+					}));
+					localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
+					return updatedData;
+				}
+				return [];
+			}
 
+			// If we have stored data, just update the existing shipment if found
+			const existingShipmentIndex = storedData.findIndex((shipment) => shipment.hbl === hbl);
 			if (existingShipmentIndex !== -1) {
 				storedData[existingShipmentIndex].isScanned = true;
 				storedData[existingShipmentIndex].timestamp = new Date().toISOString();
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
-				return storedData;
-			}
-
-			if (hbl?.length > 6) {
-				const response = await axiosInstance.get(`/shipments/delivery/${hbl}`);
-				if (response.data.length > 0) {
-					const index = response.data.findIndex((shipment: any) => shipment.hbl === hbl);
-					if (index !== -1) {
-						response.data[index].isScanned = true;
-						response.data[index].timestamp = new Date().toISOString();
-					}
-					const updatedData = [...storedData, ...response.data];
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
-					return updatedData;
-				}
-				
 			}
 
 			return storedData;
+		},
+
+		deliveryShipments: async (shipments: { hbl: string; timestamp: string }[]) => {
+			const response = await axiosInstance.post("/shipments/delivery", { shipments });
+			return response.data;
+		},
+
+		uploadImage: async (data: FormData) => {
+			console.log(data, "data to submit on api");
+			const response = await axiosInstance.post("/images/upload-images", data, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			return response.data;
 		},
 
 		scanned: async (statusId: number) => {

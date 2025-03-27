@@ -1,20 +1,46 @@
 import { useState } from "react";
-import { AlertCircle, Camera, CheckCircle, Clock } from "lucide-react";
+import { AlertCircle, Camera, Trash } from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import DeliveryConfirmationForm from "./delivery-confirm-form";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CameraScan } from "@/components/camera/camera-scan-input";
-import { useGetShipmentsInInvoice } from "@/hooks/use-shipments";
+import { useDeliveryShipments, useGetShipmentsInInvoice } from "@/hooks/use-shipments";
 import { Loader } from "@/components/common/loader";
-import { formatTimestamp } from "@/utils/dateFormatter";
+import { Form } from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import ShipmentListView from "@/components/shipments/shipment-list-view";
+import { useGeolocation } from "@uidotdev/usehooks";
+
+const formSchema = z.object({
+	parcels: z.array(
+		z.object({
+			hbl: z.string(),
+			isScanned: z.boolean(),
+			timestamp: z.string(),
+			description: z.string().optional(),
+		}),
+	),
+});
+
+type DeliveryFormValues = z.infer<typeof formSchema>;
 
 export default function DeliveryPage() {
 	const [open, setOpen] = useState(false);
 	const [hbl, setHbl] = useState("");
 	const { data: shipments, isLoading, isError } = useGetShipmentsInInvoice(hbl);
+	const mutation = useDeliveryShipments();
+	const location = useGeolocation();
+
+	const form = useForm<DeliveryFormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			parcels: [],
+		},
+	});
 
 	// Update shipments when shipmentsInInvoice changes, maintaining previous data
 
@@ -24,11 +50,37 @@ export default function DeliveryPage() {
 		setHbl(formattedHbl);
 	};
 
-	console.log(hbl);
-
 	const clearCache = () => {
 		setHbl("");
 		localStorage.removeItem("delivery-shipments");
+	};
+
+	const onSubmit = () => {
+		const shipmentsToSubmit = shipments
+			?.filter((shipment) => shipment.isScanned)
+			.map(({ hbl, timestamp }) => ({
+				hbl: hbl ?? "",
+				timestamp: timestamp ?? "",
+				statusId: 10,
+				longitude: location?.longitude ?? 0,
+				latitude: location?.latitude ?? 0,
+			}));
+
+		if (!shipmentsToSubmit?.length) {
+			toast.error("No shipments selected for delivery");
+			return;
+		}
+
+		mutation.mutate(shipmentsToSubmit, {
+			onSuccess: () => {
+				toast.success("Shipments delivered successfully");
+				clearCache();
+				setOpen(true); // Open confirmation dialog
+			},
+			onError: (error) => {
+				toast.error(error instanceof Error ? error.message : "Failed to deliver shipments");
+			},
+		});
 	};
 
 	const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -78,56 +130,34 @@ export default function DeliveryPage() {
 						</div> */}
 					</div>
 				</div>
-
-				<ScrollArea className="flex h-[60vh] pb-10  flex-col gap-1">
-					{isLoading && (
-						<div className="flex items-center justify-center h-full">
-							<Loader />
-						</div>
-					)}
-					{isError && (
-						<div className="flex items-center justify-center h-full">
-							<AlertCircle className="w-4 h-4 text-red-500" />
-						</div>
-					)}
-					{shipments?.map((shipment) => (
-						<Card className="mt-2 mx-4" key={shipment?.hbl}>
-							<CardHeader className="px-4 py-2">
-								<CardTitle className="text-sm flex items-center justify-between">
-									<span className="text-sm font-medium">{shipment?.hbl}</span>
-									{shipment?.isScanned ? (
-										<div className="flex flex-col items-center gap-1">
-											<div className="flex items-center gap-1">
-												<CheckCircle className="w-4 h-4 text-green-500" />
-												<span className="text-xs text-green-500">Scanned</span>
-											</div>
-
-											<span className="text-xs justify-end ">
-												{formatTimestamp(shipment?.timestamp)}
-											</span>
-										</div>
-									) : (
-										<div className="flex items-center gap-1">
-											<Clock className="w-4 h-4 text-orange-500" />
-											<span className="text-xs text-orange-500">Pendiente</span>
-										</div>
-									)}
-								</CardTitle>
-							</CardHeader>
-							<CardContent className="px-4 ">
-								<div className="flex justify-between items-center">
-									<p className="text-sm dark:text-muted-foreground">{shipment?.description}</p>
-								</div>
-							</CardContent>
-						</Card>
-					))}
-				</ScrollArea>
+				<div className="flex mt-4 flex-col gap-2">
+					<ScrollArea className=" h-[60vh]">
+						{isLoading && (
+							<div className="flex items-center justify-center h-full">
+								<Loader />
+							</div>
+						)}
+						{isError && (
+							<div className="flex items-center justify-center h-full">
+								<AlertCircle className="w-4 h-4 text-red-500" />
+							</div>
+						)}
+						<ShipmentListView shipments={shipments || []} />
+					</ScrollArea>
+				</div>
 			</div>
 			<div className="absolute w-full bottom-0  ">
-				<Button variant="outline" onClick={clearCache}>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)}>
+						<Button className="w-full" type="submit">
+							{mutation.isPending ? "Submitting..." : "Submit"}
+						</Button>
+					</form>
+				</Form>
+				<Button variant="outline" className="w-full mt-2" onClick={clearCache}>
+					<Trash className="w-4 h-4" />
 					Clear
 				</Button>
-				<DeliveryConfirmationForm open={open} setOpen={setOpen} />
 			</div>
 		</div>
 	);

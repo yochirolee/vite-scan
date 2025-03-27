@@ -31,16 +31,14 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function DeliveryConfirmationForm({
 	open,
 	setOpen,
+	shipments,
 }: {
 	open: boolean;
 	setOpen: (open: boolean) => void;
+	shipments: any[];
 }) {
 	// Package details state
-	const [packageDetails] = useState({
-		trackingNumber: "",
-		description: "",
-		quantity: "1",
-	});
+	
 	const form = useForm<FormValues>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -314,13 +312,13 @@ export default function DeliveryConfirmationForm({
 					<span>Finalizar Entrega</span>
 				</Button>
 			</DialogTrigger>
-			<DialogContent>
-				<DialogTitle>Delivery Confirmation</DialogTitle>
-				<ScrollArea className="h-[80vh]">
+			<DialogContent className="p-1">
+				<DialogTitle>Confirmación de Entrega</DialogTitle>
+				<ScrollArea className="h-[80vh]  ">
 					<Card className="border-none w-full ">
 						<CardHeader>
 							<CardDescription>
-								Confirm package delivery with details, photo, and signature
+								Por favor confirme la entrega de los paquetes con los datos, foto y firma
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-6">
@@ -398,27 +396,18 @@ export default function DeliveryConfirmationForm({
 										{/* Package receipt confirmation */}
 										<div className="bg-muted p-3 rounded-md text-sm">
 											<p className="font-medium mb-1">Confirmation of Receipt</p>
-											<p>
-												I confirm that I have received the package with tracking number
-												<span className="font-semibold">
-													{" "}
-													{packageDetails.trackingNumber || "[Tracking Number]"}
-												</span>
-												{packageDetails.description && (
-													<span>
-														{" "}
-														described as:{" "}
-														<span className="font-semibold">{packageDetails.description}</span>
+
+											<p>I confirm that I have received the package with tracking number</p>
+											{shipments?.map((shipment) => (
+												<div key={shipment?.hbl}>
+													<span className="font-semibold">
+														{shipment?.hbl || "[Tracking Number]"}
 													</span>
-												)}
-												{packageDetails.quantity && packageDetails.quantity !== "1" && (
 													<span>
-														{" "}
-														(Quantity:{" "}
-														<span className="font-semibold">{packageDetails.quantity}</span>)
+														<span className="font-semibold">{shipment?.description}</span>
 													</span>
-												)}
-											</p>
+												</div>
+											))}
 										</div>
 
 										<FormField

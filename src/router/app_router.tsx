@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./protected-route";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import DeliveryPage from "@/pages/scan/delivery-page";
+import DeliveryPhotosForm from "@/pages/scan/delivery-photos-form";
 
 export default function AppRouter(): JSX.Element {
 	return (
@@ -17,6 +18,7 @@ export default function AppRouter(): JSX.Element {
 						<Route path="scan/:action" element={<ScanXzing />} />
 
 						<Route path="delivery" element={<DeliveryPage />} />
+						<Route path="delivery/photos" element={<DeliveryPhotosForm/>} />
 						<Route path="*" element={<Navigate to="/" />} />
 					</Route>
 					<Route path="/login" element={<LoginPage />} />

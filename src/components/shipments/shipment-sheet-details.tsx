@@ -8,7 +8,9 @@ export default function ShipmentSheetDetails({ hbl }: { hbl: string }) {
 	return (
 		<Sheet>
 			<SheetTrigger>
-				<ChevronRight className="h-4 w-4 m-2 text-sky-600" />
+				<div className="flex items-center justify-center">
+					<ChevronRight className="h-4 w-4 m-2 text-gray-600 hover:text-sky-800" />
+				</div>
 			</SheetTrigger>
 			<SheetContent className="m-0 text p-0 w-full lg:max-w-[450px]">
 				<SheetHeader className="p-4 flex  text-center">

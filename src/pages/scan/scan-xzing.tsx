@@ -15,6 +15,7 @@ import { useAppContext } from "@/context/app-context";
 import { CameraScan } from "@/components/camera/camera-scan-input";
 import { useSound } from "use-sound";
 import errorSound from "../../error.mp3";
+import { formatDate } from "@/lib/utils";
 /* const formSchema = z.object({
 	hbls: z.array(z.string()),
 	statusId: z.number(),
@@ -232,13 +233,4 @@ const HblScanner = ({ handleScan }: { handleScan: (hbl: string) => void }) => {
 	);
 };
 
-const formatDate = (dateString: string): string => {
-	const date = new Date(dateString);
-	const day = date.getDate().toString().padStart(2, "0");
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const year = date.getFullYear();
-	const hours = date.getHours().toString().padStart(2, "0");
-	const minutes = date.getMinutes().toString().padStart(2, "0");
 
-	return `${day}/${month}/${year} ${hours}:${minutes}`;
-};

@@ -42,9 +42,20 @@ export const useGetShipmentByHbl = (hbl: string) => {
 };
 
 export const useGetShipmentsInInvoice = (hbl: string) => {
+
 	return useQuery({
 		queryKey: ["getShipmentsInInvoice", hbl],
 		queryFn: () => api.shipments.getShipmentsInInvoice(hbl),
 		
+		
 	});
 };
+
+export const useDeliveryShipments = () => {
+	return useMutation({
+		mutationFn: (shipments: { hbl: string; timestamp: string }[]) =>
+			api.shipments.deliveryShipments(shipments),
+		   
+	});
+};
+
