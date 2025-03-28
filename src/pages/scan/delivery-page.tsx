@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import ShipmentListView from "@/components/shipments/shipment-list-view";
 import { useGeolocation } from "@uidotdev/usehooks";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
 	parcels: z.array(
@@ -29,11 +30,11 @@ const formSchema = z.object({
 type DeliveryFormValues = z.infer<typeof formSchema>;
 
 export default function DeliveryPage() {
-	const [open, setOpen] = useState(false);
 	const [hbl, setHbl] = useState("");
 	const { data: shipments, isLoading, isError } = useGetShipmentsInInvoice(hbl);
 	const mutation = useDeliveryShipments();
 	const location = useGeolocation();
+	const navigate = useNavigate();
 
 	const form = useForm<DeliveryFormValues>({
 		resolver: zodResolver(formSchema),
@@ -72,10 +73,11 @@ export default function DeliveryPage() {
 		}
 
 		mutation.mutate(shipmentsToSubmit, {
-			onSuccess: () => {
+			onSuccess: (data) => {
 				toast.success("Shipments delivered successfully");
-				clearCache();
-				setOpen(true); // Open confirmation dialog
+				console.log(data, "data");
+				const eventsId = data.map((item: any) => item.id);
+				navigate(`/delivery/photos?eventsId=${eventsId}`);
 			},
 			onError: (error) => {
 				toast.error(error instanceof Error ? error.message : "Failed to deliver shipments");
@@ -154,6 +156,7 @@ export default function DeliveryPage() {
 						</Button>
 					</form>
 				</Form>
+
 				<Button variant="outline" className="w-full mt-2" onClick={clearCache}>
 					<Trash className="w-4 h-4" />
 					Clear

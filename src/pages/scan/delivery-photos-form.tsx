@@ -1,7 +1,9 @@
 import { api } from "@/api/api";
-import { Camera, Loader2 } from "lucide-react";
+import { Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import PhotoCamera from "./photo-camera";
+import { useSearchParams } from "react-router-dom";
 // Componente para subir fotos
 
 interface ImageOptimizationOptions {
@@ -48,17 +50,19 @@ const optimizeImage = async (file: File, options: ImageOptimizationOptions): Pro
 };
 
 export default function DeliveryPhotosForm() {
+	const [searchParams] = useSearchParams();
+	const eventsId = searchParams.get("eventsId");
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [photos, setPhotos] = useState<string[]>([]);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
+	console.log(eventsId, "eventsId");
 	const uploadMutation = useMutation({
 		mutationFn: async (formData: FormData) => {
 			return api.shipments.uploadImage(formData);
 		},
 		onSuccess: (response) => {
 			if (response.url) {
-				handleAddPhoto(response.url);
+				setPhotos([...photos, response.url]);
 			}
 		},
 		onSettled: () => {
@@ -70,7 +74,23 @@ export default function DeliveryPhotosForm() {
 	});
 
 	const handleAddPhoto = (newPhoto: string) => {
-		setPhotos([...photos, newPhoto]);
+		// Convert data URL to Blob
+		setPreviewUrl(newPhoto);
+		const formData = new FormData();
+		const byteString = atob(newPhoto.split(",")[1]);
+		const ab = new ArrayBuffer(byteString.length);
+		const ia = new Uint8Array(ab);
+
+		for (let i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+
+		const blob = new Blob([ab], { type: "image/jpeg" });
+		const file = new File([blob], "delivery-photo.jpg", { type: "image/jpeg" });
+		console.log(eventsId, "eventsId");
+		formData.append("file", file);
+		formData.append("eventsId", eventsId as string);
+		uploadMutation.mutateAsync(formData);
 	};
 
 	const handleRemovePhoto = (index: number) => {
@@ -110,6 +130,7 @@ export default function DeliveryPhotosForm() {
 
 	return (
 		<div className="space-y-3">
+			<PhotoCamera handleAddPhoto={handleAddPhoto} />
 			<div className="grid grid-cols-3 gap-2">
 				{photos.map((photo, index) => (
 					<div key={index} className="relative aspect-square">
@@ -143,9 +164,10 @@ export default function DeliveryPhotosForm() {
 				<button
 					onClick={triggerFileInput}
 					disabled={uploadMutation.isPending}
-					className="aspect-square border-2 border-dashed border-muted-foreground/30 rounded-md flex items-center justify-center text-muted-foreground disabled:opacity-50"
+					className="aspect-square flex flex-col gap-2 border-2 border-dashed border-muted-foreground/30 rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
 				>
-					<Camera className="h-6 w-6" />
+					<UploadCloud className="h-6 w-6" />
+					<p className="text-xs">Subir foto</p>
 				</button>
 			</div>
 
