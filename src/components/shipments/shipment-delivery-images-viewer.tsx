@@ -7,8 +7,13 @@ import {
 	CarouselPrevious,
 	CarouselNext,
 } from "@/components/ui/carousel";
+import { Card, CardContent } from "../ui/card";
 
-export default function ShipmentDeliveryImagesViewer({ images }: { images: { imageUrl: string }[] }) {
+export default function ShipmentDeliveryImagesViewer({
+	images,
+}: {
+	images: { imageUrl: string }[];
+}) {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -19,21 +24,25 @@ export default function ShipmentDeliveryImagesViewer({ images }: { images: { ima
 					</span>
 				</div>
 			</DialogTrigger>
-			<DialogContent>
-				<Carousel>
-					<CarouselContent>
+			<DialogContent >
+				<Carousel className=" py-6 relative">
+					<CarouselContent className="">
 						{images.map((image, index) => (
 							<CarouselItem key={index}>
-								<img
-									src={image.imageUrl}
-									alt="image"
-									className="aspect-square h-full rounded-lg p-4"
-								/>
+								<div className="p-1">
+									<Card className=" rounded-lg">
+										<CardContent className=" p-0 rounded-lg">
+											<img src={image.imageUrl} alt="image" className="aspect-square  object-cover" />
+										</CardContent>
+									</Card>
+								</div>
 							</CarouselItem>
 						))}
 					</CarouselContent>
-					<CarouselPrevious />
-					<CarouselNext />
+					<div className="flex justify-between absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+						<CarouselPrevious />
+						<CarouselNext />
+					</div>
 				</Carousel>
 			</DialogContent>
 		</Dialog>
