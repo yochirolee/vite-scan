@@ -119,7 +119,7 @@ export default function DeliveryPage() {
 								<span className="text-sm font-medium">Scanned:</span>
 								<Badge variant="outline" className="bg-green-500 text-white">
 									<span className="text-sm font-medium">
-										{shipments?.filter((shipment) => shipment?.isScanned)?.length}/
+										{shipments?.filter((shipment: Shipment) => shipment?.isScanned)?.length}/
 										{shipments?.length}
 									</span>
 								</Badge>
