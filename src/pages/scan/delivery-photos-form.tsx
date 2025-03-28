@@ -3,7 +3,7 @@ import { Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import PhotoCamera from "./photo-camera";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 // Componente para subir fotos
 

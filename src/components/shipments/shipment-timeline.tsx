@@ -21,7 +21,7 @@ export type ShipmentEvent = {
 	};
 	timestamp: string;
 	isCompleted: boolean;
-	images: string[];
+	images: { imageUrl: string }[];
 };
 export default function ShipmentTimeline({ events }: { events: ShipmentEvent[] }) {
 	return (
