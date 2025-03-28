@@ -1,12 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 
-// Componente para capturar firma
-interface SignatureCaptureProps {
-	value: string;
-	onChange: (value: string) => void;
-}
 
-export default function SignatureCapture({ value, onChange }: SignatureCaptureProps) {
+
+export default function SignatureCapture() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [isDrawing, setIsDrawing] = useState(false);
 
@@ -22,16 +18,8 @@ export default function SignatureCapture({ value, onChange }: SignatureCapturePr
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "#000";
 
-		// Si hay una firma guardada, cargarla
-		if (value) {
-			const img = new Image();
-			img.onload = () => {
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.drawImage(img, 0, 0);
-			};
-			img.src = value;
-		}
-	}, [value]);
+		
+	}, []);
 
 	const startDrawing = (
 		e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
@@ -90,13 +78,7 @@ export default function SignatureCapture({ value, onChange }: SignatureCapturePr
 		const canvas = canvasRef.current;
 		if (!canvas) return;
 
-		// Ensure onChange is defined before calling it
-		if (typeof onChange === "function") {
-			const dataUrl = canvas.toDataURL("image/png");
-			onChange(dataUrl);
-		} else {
-			console.warn("onChange handler is not provided to SignatureCapture component");
-		}
+		
 	};
 
 	const clearSignature = () => {
@@ -108,9 +90,7 @@ export default function SignatureCapture({ value, onChange }: SignatureCapturePr
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		// Ensure onChange is defined before calling it
-		if (typeof onChange === "function") {
-			onChange("");
-		}
+		
 	};
 
 	return (
