@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { CameraIcon } from "lucide-react";
+import { Images } from "lucide-react";
 import {
 	Carousel,
 	CarouselContent,
@@ -17,14 +17,14 @@ export default function ShipmentDeliveryImagesViewer({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<div className="flex relative flex-row gap-2">
-					<CameraIcon className="w-4 h-4" />
+				<div className="flex relative flex-row gap-2 cursor-pointer">
+					<Images className="w-4 h-4" />
 					<span className="absolute -top-2 -right-2 text-white bg-green-500 rounded-full w-4 h-4 flex items-center justify-center text-xs ">
 						{images.length}
 					</span>
 				</div>
 			</DialogTrigger>
-			<DialogContent >
+			<DialogContent>
 				<Carousel className=" py-6 relative">
 					<CarouselContent className="">
 						{images.map((image, index) => (
@@ -32,7 +32,11 @@ export default function ShipmentDeliveryImagesViewer({
 								<div className="p-1">
 									<Card className=" rounded-lg">
 										<CardContent className=" p-0 rounded-lg">
-											<img src={image.imageUrl} alt="image" className="aspect-square  object-cover" />
+											<img
+												src={image.imageUrl}
+												alt="image"
+												className="aspect-square  object-cover"
+											/>
 										</CardContent>
 									</Card>
 								</div>

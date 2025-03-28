@@ -113,11 +113,10 @@ export default function DeliveryPage() {
 				<div className="flex  items-center dark:bg-gray-900 p-2 rounded-lg">
 					<div className="flex flex-col ml-2 w-full space-y-1 ">
 						<div className="flex items-center w-full justify-between gap-2">
-							<p className="text-md pb-1  font-medium">Leidiana Torres Roca</p>
 							<div className="flex items-center gap-2">
-								<span className="text-sm font-medium">Scanned:</span>
+								<span className="text-xs font-medium">Scanned:</span>
 								<Badge variant="outline" className="bg-green-500 text-white">
-									<span className="text-sm font-medium">
+									<span className="text-xs font-medium">
 										{shipments?.filter((shipment: Shipment) => shipment?.isScanned)?.length}/
 										{shipments?.length}
 									</span>

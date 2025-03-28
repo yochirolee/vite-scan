@@ -53,7 +53,7 @@ const optimizeImage = async (file: File, options: ImageOptimizationOptions): Pro
 export default function DeliveryPhotosForm() {
 	const navigate = useNavigate();
 	const { eventsId } = useLocation().state as { eventsId: string[] };
-	
+
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [photos, setPhotos] = useState<string[]>([]);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -93,7 +93,6 @@ export default function DeliveryPhotosForm() {
 		//array of string
 
 		uploadMutation.mutateAsync(formData);
-
 	};
 
 	const handleRemovePhoto = (index: number) => {
@@ -117,7 +116,6 @@ export default function DeliveryPhotosForm() {
 
 			const formData = new FormData();
 			formData.append("file", optimizedImage, file.name);
-			formData.append("eventsId", "280866");
 
 			await uploadMutation.mutateAsync(formData);
 		} finally {
@@ -131,11 +129,19 @@ export default function DeliveryPhotosForm() {
 		}
 	};
 
-	
-
 	return (
-		<div className="space-y-3">
-			<PhotoCamera handleAddPhoto={handleAddPhoto} />
+		<div className="space-y-3 w-full">
+			<div className="flex w-full justify-center">
+				<button
+					onClick={triggerFileInput}
+					disabled={uploadMutation.isPending}
+					className="w-full  p-4 flex flex-col gap-2 border-2 border-dashed border-muted-foreground/30 rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
+				>
+					<UploadCloud className="h-6 w-6" />
+					<p className="text-xs">Subir foto o Tomar foto</p>
+				</button>
+			</div>
+
 			<div className="grid grid-cols-3 gap-2">
 				{photos.map((photo, index) => (
 					<div key={index} className="relative aspect-square">
@@ -165,15 +171,6 @@ export default function DeliveryPhotosForm() {
 						</div>
 					</div>
 				)}
-
-				<button
-					onClick={triggerFileInput}
-					disabled={uploadMutation.isPending}
-					className="aspect-square flex flex-col gap-2 border-2 border-dashed border-muted-foreground/30 rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
-				>
-					<UploadCloud className="h-6 w-6" />
-					<p className="text-xs">Subir foto</p>
-				</button>
 			</div>
 
 			<input
