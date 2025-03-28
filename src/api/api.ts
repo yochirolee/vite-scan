@@ -142,13 +142,20 @@ const api = {
 			return response.data;
 		},
 
-		uploadImage: async (data: FormData) => {
+		uploadImage: async (data: FormData, eventsId: string[]) => {
 			console.log(data, "data to submit on api");
 			const response = await axiosInstance.post("/images/upload-images", data, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
 			});
+			if (response.status === 200) {
+				 await axiosInstance.post("/images/insert", {
+					eventsId,
+					image: response.data.url,
+				});
+				return response.data;
+			}
 			return response.data;
 		},
 

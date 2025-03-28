@@ -21,6 +21,7 @@ export type ShipmentEvent = {
 	};
 	timestamp: string;
 	isCompleted: boolean;
+	images: string[];
 };
 export default function ShipmentTimeline({ events }: { events: ShipmentEvent[] }) {
 	return (
@@ -39,6 +40,7 @@ export default function ShipmentTimeline({ events }: { events: ShipmentEvent[] }
 							isCompleted={event.isCompleted}
 							location={event.location}
 							isLast={index === events.length - 1}
+							images={event.images}
 						/>
 					);
 				})}

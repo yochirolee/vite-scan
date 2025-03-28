@@ -1,6 +1,5 @@
+import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect } from "react";
-
-
 
 export default function SignatureCapture() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,8 +16,6 @@ export default function SignatureCapture() {
 		ctx.lineWidth = 3;
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "#000";
-
-		
 	}, []);
 
 	const startDrawing = (
@@ -77,8 +74,6 @@ export default function SignatureCapture() {
 
 		const canvas = canvasRef.current;
 		if (!canvas) return;
-
-		
 	};
 
 	const clearSignature = () => {
@@ -90,7 +85,6 @@ export default function SignatureCapture() {
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		// Ensure onChange is defined before calling it
-		
 	};
 
 	return (
@@ -120,6 +114,9 @@ export default function SignatureCapture() {
 			<p className="text-xs text-muted-foreground text-center">
 				Firma del cliente que recibe los paquetes
 			</p>
+			<div className="flex justify-center">
+				<Button>Completar Entrega</Button>
+			</div>
 		</div>
 	);
 }

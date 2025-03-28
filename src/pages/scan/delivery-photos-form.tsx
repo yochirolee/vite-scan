@@ -3,7 +3,8 @@ import { Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import PhotoCamera from "./photo-camera";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 // Componente para subir fotos
 
 interface ImageOptimizationOptions {
@@ -50,15 +51,16 @@ const optimizeImage = async (file: File, options: ImageOptimizationOptions): Pro
 };
 
 export default function DeliveryPhotosForm() {
-	const [searchParams] = useSearchParams();
-	const eventsId = searchParams.get("eventsId");
+	const navigate = useNavigate();
+	const { eventsId } = useLocation().state as { eventsId: string[] };
+	
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [photos, setPhotos] = useState<string[]>([]);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-	console.log(eventsId, "eventsId");
+
 	const uploadMutation = useMutation({
 		mutationFn: async (formData: FormData) => {
-			return api.shipments.uploadImage(formData);
+			return api.shipments.uploadImage(formData, eventsId);
 		},
 		onSuccess: (response) => {
 			if (response.url) {
@@ -87,10 +89,11 @@ export default function DeliveryPhotosForm() {
 
 		const blob = new Blob([ab], { type: "image/jpeg" });
 		const file = new File([blob], "delivery-photo.jpg", { type: "image/jpeg" });
-		console.log(eventsId, "eventsId");
 		formData.append("file", file);
-		formData.append("eventsId", eventsId as string);
+		//array of string
+
 		uploadMutation.mutateAsync(formData);
+
 	};
 
 	const handleRemovePhoto = (index: number) => {
@@ -127,6 +130,8 @@ export default function DeliveryPhotosForm() {
 			fileInputRef.current.click();
 		}
 	};
+
+	
 
 	return (
 		<div className="space-y-3">
@@ -181,6 +186,11 @@ export default function DeliveryPhotosForm() {
 			/>
 
 			<p className="text-xs text-muted-foreground text-center">Toma fotos de la entrega</p>
+			<div className="flex justify-center">
+				<Button variant="outline" onClick={() => navigate("/delivery/signature")}>
+					Continuar Entrega
+				</Button>
+			</div>
 		</div>
 	);
 }

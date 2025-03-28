@@ -87,9 +87,8 @@ export default function DeliveryPage() {
 		mutation.mutate(shipmentsToSubmit, {
 			onSuccess: (data) => {
 				toast.success("Shipments delivered successfully");
-				console.log(data, "data");
 				const eventsId = data.map((item: any) => item.id);
-				navigate(`/delivery/photos?eventsId=${eventsId}`);
+				navigate("/delivery/photos", { state: { eventsId } });
 			},
 			onError: (error) => {
 				toast.error(error instanceof Error ? error.message : "Failed to deliver shipments");
