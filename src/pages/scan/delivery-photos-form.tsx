@@ -2,7 +2,6 @@ import { api } from "@/api/api";
 import { Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import PhotoCamera from "./photo-camera";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 // Componente para subir fotos
@@ -75,7 +74,7 @@ export default function DeliveryPhotosForm() {
 		},
 	});
 
-	const handleAddPhoto = (newPhoto: string) => {
+	/* const handleAddPhoto = (newPhoto: string) => {
 		// Convert data URL to Blob
 		setPreviewUrl(newPhoto);
 		const formData = new FormData();
@@ -93,7 +92,7 @@ export default function DeliveryPhotosForm() {
 		//array of string
 
 		uploadMutation.mutateAsync(formData);
-	};
+	}; */
 
 	const handleRemovePhoto = (index: number) => {
 		setPhotos(photos.filter((_, i) => i !== index));
