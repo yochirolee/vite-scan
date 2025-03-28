@@ -26,6 +26,18 @@ const formSchema = z.object({
 		}),
 	),
 });
+type Shipment = {
+	hbl: string;
+	invoiceId: number;
+	agency: string;
+	receiver: string;
+	sender: string;
+	isScanned: boolean;
+	state: string;
+	status: string;
+	timestamp: string;
+	description: string;
+};
 
 type DeliveryFormValues = z.infer<typeof formSchema>;
 
@@ -58,8 +70,8 @@ export default function DeliveryPage() {
 
 	const onSubmit = () => {
 		const shipmentsToSubmit = shipments
-			?.filter((shipment) => shipment.isScanned)
-			.map(({ hbl, timestamp }) => ({
+			?.filter((shipment: Shipment) => shipment.isScanned)
+			.map(({ hbl, timestamp }: Shipment) => ({
 				hbl: hbl ?? "",
 				timestamp: timestamp ?? "",
 				statusId: 10,

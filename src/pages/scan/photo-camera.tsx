@@ -9,10 +9,8 @@ export default function PhotoCamera({
 }) {
 	const [image, setImage] = useState<string | null>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
-	const [isCapturing, setIsCapturing] = useState(false);
 
 	const startCamera = async () => {
-		setIsCapturing(true);
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({
 				video: { facingMode: "environment" },
