@@ -1,4 +1,3 @@
-import { CameraIcon } from "lucide-react";
 import ShipmentDeliveryImagesViewer from "./shipment-delivery-images-viewer";
 
 interface TimelineItemProps {
@@ -23,7 +22,7 @@ interface TimelineItemProps {
 	};
 
 	isLast: boolean;
-	images: string[];
+	images: { imageUrl: string }[];
 }
 
 export default function ShipmentTimelineItem({
