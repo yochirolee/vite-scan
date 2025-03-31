@@ -121,7 +121,7 @@ export default function DeliveryPage() {
 							</div>
 							<Form {...form}>
 								<form onSubmit={form.handleSubmit(onSubmit)}>
-									<Button className="w-full" type="submit">
+									<Button disabled={shipments?.length === 0} className="w-full" type="submit">
 										{mutation.isPending ? "Guardando..." : "Continuar"}
 									</Button>
 								</form>
