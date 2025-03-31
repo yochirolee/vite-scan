@@ -63,10 +63,7 @@ export default function DeliveryPage() {
 		setHbl(formattedHbl);
 	};
 
-	const clearCache = () => {
-		setHbl("");
-		localStorage.removeItem("delivery-shipments");
-	};
+	
 
 	const onSubmit = () => {
 		const shipmentsToSubmit = shipments
@@ -114,7 +111,7 @@ export default function DeliveryPage() {
 					<div className="flex flex-col ml-2 w-full space-y-1 ">
 						<div className="flex items-center w-full justify-between gap-2">
 							<div className="flex items-center gap-2">
-								<span className="text-xs font-medium">Scanned:</span>
+								<span className="text-xs ">Scanned:</span>
 								<Badge variant="outline" className="bg-green-500 text-white">
 									<span className="text-xs font-medium">
 										{shipments?.filter((shipment: Shipment) => shipment?.isScanned)?.length}/
@@ -122,6 +119,13 @@ export default function DeliveryPage() {
 									</span>
 								</Badge>
 							</div>
+							<Form {...form}>
+								<form onSubmit={form.handleSubmit(onSubmit)}>
+									<Button className="w-full" type="submit">
+										{mutation.isPending ? "Guardando..." : "Continuar"}
+									</Button>
+								</form>
+							</Form>
 						</div>
 						{/* 
 						<div className="flex flex-col gap-2 justify-start  ">
@@ -143,7 +147,7 @@ export default function DeliveryPage() {
 					</div>
 				</div>
 				<div className="flex mt-4 flex-col gap-2">
-					<ScrollArea className=" h-[60vh]">
+					<ScrollArea className=" h-[50vh]">
 						{isLoading && (
 							<div className="flex items-center justify-center h-full">
 								<Loader />
@@ -158,20 +162,7 @@ export default function DeliveryPage() {
 					</ScrollArea>
 				</div>
 			</div>
-			<div className="absolute w-full bottom-0  ">
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<Button className="w-full" type="submit">
-							{mutation.isPending ? "Submitting..." : "Submit"}
-						</Button>
-					</form>
-				</Form>
-
-				<Button variant="outline" className="w-full mt-2" onClick={clearCache}>
-					<Trash className="w-4 h-4" />
-					Clear
-				</Button>
-			</div>
+			
 		</div>
 	);
 }

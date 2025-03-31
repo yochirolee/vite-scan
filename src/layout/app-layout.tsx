@@ -20,7 +20,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { cameraMode, setCameraMode } = useAppContext();
 	const isOnline = useOnlineStatus();
 	const { action } = useParams<{ action: string }>();
-	
+
 	useEffect(() => {
 		setCameraMode(false);
 	}, [action]);
@@ -36,11 +36,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 			<nav className="  z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 				<div className="flex justify-between items-center h-12">
 					<div className="flex items-center gap-1">
-						{action && (
-							<Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-								<ArrowLeft />
-							</Button>
-						)}
+						<Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+							<ArrowLeft />
+						</Button>
+
 						<div
 							className={`text-xs inline-flex items-center gap-2 text-muted-foreground ${
 								action ? "text-primary " : "ml-2"

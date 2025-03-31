@@ -1,9 +1,10 @@
 import { api } from "@/api/api";
-import { Loader2, UploadCloud } from "lucide-react";
+import { Camera, Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 // Componente para subir fotos
 
 interface ImageOptimizationOptions {
@@ -56,6 +57,12 @@ export default function DeliveryPhotosForm() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [photos, setPhotos] = useState<string[]>([]);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+	const clearCache = () => {
+		setPhotos([]);
+		localStorage.removeItem("delivery-shipments");
+		navigate("/delivery");
+		toast.success("Entrega terminada");
+	};
 
 	const uploadMutation = useMutation({
 		mutationFn: async (formData: FormData) => {
@@ -134,9 +141,9 @@ export default function DeliveryPhotosForm() {
 				<button
 					onClick={triggerFileInput}
 					disabled={uploadMutation.isPending}
-					className="w-full  p-4 flex flex-col gap-2 border-2 border-dashed border-muted-foreground/30 rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
+					className="w-full   p-4 flex flex-col gap-2 border-2 border-dashed border-muted-foreground/30 rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
 				>
-					<UploadCloud className="h-6 w-6" />
+					<Camera className="h-6 w-6" />
 					<p className="text-xs">Subir foto o Tomar foto</p>
 				</button>
 			</div>
@@ -183,8 +190,8 @@ export default function DeliveryPhotosForm() {
 
 			<p className="text-xs text-muted-foreground text-center">Toma fotos de la entrega</p>
 			<div className="flex justify-center">
-				<Button variant="outline" onClick={() => navigate("/delivery/signature")}>
-					Continuar Entrega
+				<Button variant="outline" onClick={() => clearCache()}>
+					Terminar Entrega
 				</Button>
 			</div>
 		</div>

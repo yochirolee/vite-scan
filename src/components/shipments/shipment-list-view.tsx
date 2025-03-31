@@ -19,7 +19,7 @@ type Shipment = z.infer<typeof shipmentsProps>["shipments"][number];
 export default function ShipmentListView({ shipments }: { shipments: Shipment[] }) {
 	console.log(shipments);
 	return (
-		<div className="flex flex-col  gap-2 pb-2 mx-4  ">
+		<div className="flex flex-col  gap-2 pb-2 pr-2  ">
 			{shipments?.map((shipment) => (
 				<div
 					className="flex flex-1 min-h-20 justify-between items-center gap-4 px-2 border rounded-lg py-2"
