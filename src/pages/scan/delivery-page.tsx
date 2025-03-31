@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertCircle, Camera } from "lucide-react";
+import { AlertCircle, Camera, Trash } from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +63,12 @@ export default function DeliveryPage() {
 		setHbl(formattedHbl);
 	};
 
-	
+	const clearCache = () => {
+		setHbl("");
+		localStorage.removeItem("delivery-shipments");
+		toast.success("Entrega Descartada");
+		navigate("/delivery");
+	};
 
 	const onSubmit = () => {
 		const shipmentsToSubmit = shipments
@@ -119,11 +124,18 @@ export default function DeliveryPage() {
 									</span>
 								</Badge>
 							</div>
+
 							<Form {...form}>
 								<form onSubmit={form.handleSubmit(onSubmit)}>
-									<Button disabled={shipments?.length === 0} className="w-full" type="submit">
-										{mutation.isPending ? "Guardando..." : "Continuar"}
-									</Button>
+									<div className="flex gap-2 items-center">
+										<Trash
+											onClick={() => clearCache()}
+											className="w-6 h-6 cursor-pointer hover:text-red-500"
+										/>
+										<Button disabled={shipments?.length === 0} className="w-full" type="submit">
+											{mutation.isPending ? "Guardando..." : "Continuar"}
+										</Button>
+									</div>
 								</form>
 							</Form>
 						</div>
@@ -162,7 +174,6 @@ export default function DeliveryPage() {
 					</ScrollArea>
 				</div>
 			</div>
-			
 		</div>
 	);
 }
