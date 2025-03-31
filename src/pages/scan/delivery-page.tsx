@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertCircle, Camera, Trash } from "lucide-react";
+import { AlertCircle, Camera } from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

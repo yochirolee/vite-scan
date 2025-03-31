@@ -1,5 +1,5 @@
 import { api } from "@/api/api";
-import { Camera, Loader2, UploadCloud } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
