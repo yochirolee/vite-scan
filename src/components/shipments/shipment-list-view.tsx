@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils";
-import { CheckCircle, Clock } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { z } from "zod";
 import ShipmentSheetDetails from "./shipment-sheet-details";
 const shipmentsProps = z.object({
@@ -17,10 +17,17 @@ const shipmentsProps = z.object({
 type Shipment = z.infer<typeof shipmentsProps>["shipments"][number];
 
 export default function ShipmentListView({ shipments }: { shipments: Shipment[] }) {
-	console.log(shipments);
+
+	const orderShipments = shipments.sort((a, b) => {
+		if (a.isScanned && !b.isScanned) return -1;
+		if (!a.isScanned && b.isScanned) return 1;
+		return 0;
+	});
+	
+	
 	return (
 		<div className="flex flex-col  gap-2 pb-2 pr-2  ">
-			{shipments?.map((shipment) => (
+			{orderShipments?.map((shipment) => (
 				<div
 					className="flex flex-1 min-h-20 justify-between items-center gap-4 px-2 border rounded-lg py-2"
 					key={shipment?.hbl}
@@ -44,8 +51,7 @@ export default function ShipmentListView({ shipments }: { shipments: Shipment[] 
 							</div>
 						) : (
 							<div className="flex items-center gap-1">
-								<Clock className="w-4 h-4 text-gray-500" />
-								<span className="text-xs text-gray-500">Pendiente {shipment?.status}</span>
+								<span className="text-xs text-gray-500">{shipment?.status}</span>
 								
 							</div>
 						)}

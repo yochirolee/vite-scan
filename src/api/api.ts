@@ -1,6 +1,7 @@
 import { User } from "@/types/user";
 import axios from "axios";
 import { createOfflineQueue } from "@/lib/offline-queue";
+import { infiniteQueryOptions } from "@tanstack/react-query";
 
 export interface ShipmentsInterface {
 	hbls: string[];
@@ -101,7 +102,7 @@ const api = {
 			return response.data;
 		},
 
-		// Get all shipments in an invoice once a hbl is scanned
+		/* // Get all shipments in an invoice once a hbl is scanned
 		getShipmentsInInvoice: async (hbl: string) => {
 			const STORAGE_KEY = "delivery-shipments";
 			const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]") as Array<{
@@ -135,6 +136,10 @@ const api = {
 			}
 
 			return storedData;
+		}, */
+		getAllShipmentsInInvoice: async (hbl: string) => {
+			const response = await axiosInstance.get(`/shipments/delivery/${hbl}`);
+			return response.data;
 		},
 
 		deliveryShipments: async (shipments: { hbl: string; timestamp: string }[]) => {
@@ -150,7 +155,7 @@ const api = {
 				},
 			});
 			if (response.status === 200) {
-				 await axiosInstance.post("/images/insert", {
+				await axiosInstance.post("/images/insert", {
 					eventsId,
 					image: response.data.url,
 				});

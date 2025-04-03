@@ -39,6 +39,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const USER_KEY = "user";
 const TOKEN_KEY = "token";
+const isTokenExpired = (token: string | null): boolean => {
+	if (!token) return true;
+	try {
+		const decoded: any = jwtDecode(token);
+		const currentTime = Date.now() / 1000;
+
+		return decoded.exp < currentTime;
+	} catch (error) {
+		return true;
+	}
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const navigate = useNavigate();
@@ -50,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	const [token, setToken] = useState<string | null>(() => {
 		const savedToken = localStorage.getItem(TOKEN_KEY);
-		return savedToken ? JSON.parse(savedToken) : null;
+		return !isTokenExpired(savedToken) ? JSON.parse(savedToken || "") : null;
 	});
 
 	const loginMutation = useLoginMutation();
@@ -63,16 +74,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	}, [token]);
 
-	const isTokenExpired = (token: string): boolean => {
-		try {
-			const decoded: any = jwtDecode(token);
-			const currentTime = Date.now() / 1000;
-
-			return decoded.exp < currentTime;
-		} catch (error) {
-			return true;
-		}
-	};
 	const login = async (email: string, password: string) => {
 		return loginMutation.mutate(
 			{ email, password },

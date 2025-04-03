@@ -52,14 +52,26 @@ export const statuses: Status[] = [
 		id: 9,
 		name: "Mensajero o Repartidor",
 		link: "/scan/9",
-		allowedRoles: [Role.ROOT, Role.ADMINISTRATOR, Role.AGENCY_ADMIN, Role.DELIVERY_DRIVER],
+		allowedRoles: [
+			Role.ROOT,
+			Role.ADMINISTRATOR,
+			Role.AGENCY_ADMIN,
+			Role.MESSENGER,
+			Role.DELIVERY_DRIVER,
+		],
 		icon: "OUT_FOR_DELIVERY",
 	},
 	{
 		id: 10,
 		name: "Entregar",
 		link: "/delivery",
-		allowedRoles: [Role.ROOT, Role.ADMINISTRATOR, Role.AGENCY_ADMIN, Role.DELIVERY_DRIVER],
+		allowedRoles: [
+			Role.ROOT,
+			Role.ADMINISTRATOR,
+			Role.AGENCY_ADMIN,
+			Role.MESSENGER,
+			Role.DELIVERY_DRIVER,
+		],
 		icon: "DELIVERED",
 	},
 ];

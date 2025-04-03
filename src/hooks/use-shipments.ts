@@ -1,4 +1,5 @@
 import { api } from "@/api/api";
+import { Shipment } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { toast } from "sonner";
@@ -41,13 +42,11 @@ export const useGetShipmentByHbl = (hbl: string) => {
 	});
 };
 
-export const useGetShipmentsInInvoice = (hbl: string) => {
-
+export const useGetAllShipmentsInInvoice = (hbl: string) => {
 	return useQuery({
 		queryKey: ["getShipmentsInInvoice", hbl],
-		queryFn: () => api.shipments.getShipmentsInInvoice(hbl),
-		
-		
+		queryFn: () => api.shipments.getAllShipmentsInInvoice(hbl),
+		enabled: !!hbl,
 	});
 };
 
@@ -55,7 +54,41 @@ export const useDeliveryShipments = () => {
 	return useMutation({
 		mutationFn: (shipments: { hbl: string; timestamp: string }[]) =>
 			api.shipments.deliveryShipments(shipments),
-		   
 	});
 };
 
+export const useUpdateShipmentStatus = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({
+			hbl,
+			isScanned,
+			timestamp,
+		}: {
+			hbl: string;
+			isScanned: boolean;
+			timestamp: string;
+		}) => {
+			// Here we're just updating the local state
+			// You can add an API call if needed
+			return Promise.resolve({ hbl, isScanned, timestamp });
+		},
+		onMutate: async ({ hbl, isScanned, timestamp }) => {
+			console.log(hbl, isScanned, timestamp, "hbl, isScanned, timestamp");
+			// Cancel outgoing refetches
+			await queryClient.cancelQueries({ queryKey: ["getShipmentsInInvoice"] });
+
+			// Update the cache
+			queryClient.setQueriesData({ queryKey: ["getShipmentsInInvoice"] }, (old: any) => {
+				if (!old) return old;
+				return {
+					...old,
+					shipments: old.shipments.map((shipment: Shipment) =>
+						shipment.hbl === hbl ? { ...shipment, isScanned, timestamp } : shipment,
+					),
+				};
+			});
+		},
+	});
+};
