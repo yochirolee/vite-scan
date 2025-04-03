@@ -1,7 +1,6 @@
 import { User } from "@/types/user";
 import axios from "axios";
 import { createOfflineQueue } from "@/lib/offline-queue";
-import { infiniteQueryOptions } from "@tanstack/react-query";
 
 export interface ShipmentsInterface {
 	hbls: string[];

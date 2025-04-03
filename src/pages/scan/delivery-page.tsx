@@ -54,8 +54,7 @@ export default function DeliveryPage() {
 	const navigate = useNavigate();
 	const updateStatus = useUpdateShipmentStatus();
 
-	console.log(shipmentsInInvoice, "shipmentsInInvoice");
-
+	
 	const form = useForm<DeliveryFormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -79,12 +78,12 @@ export default function DeliveryPage() {
 		setHbl(formattedHbl);
 	};
 
-	const clearCache = () => {
+	/* const clearCache = () => {
 		setHbl("");
 		localStorage.removeItem("delivery-shipments");
 		toast.success("Entrega Descartada");
 		navigate("/delivery");
-	};
+	}; */
 
 	const onSubmit = () => {
 		const shipmentsToSubmit = shipmentsInInvoice?.shipments
