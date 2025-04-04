@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { AlertCircle, ScanBarcode } from "lucide-react";
+import {
+	AlertCircle,
+	Calendar,
+	ScanBarcode,
+	ChevronDown,
+	ChevronUp,
+	File,
+} from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +26,9 @@ import { toast } from "sonner";
 import ShipmentListView from "@/components/shipments/shipment-list-view";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { useNavigate } from "react-router-dom";
-import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
+import { formatDate } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
+import NoShipments from "@/components/no-shipments";
 
 const formSchema = z.object({
 	parcels: z.array(
@@ -54,7 +63,6 @@ export default function DeliveryPage() {
 	const navigate = useNavigate();
 	const updateStatus = useUpdateShipmentStatus();
 
-	
 	const form = useForm<DeliveryFormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -126,36 +134,46 @@ export default function DeliveryPage() {
 			) : (
 				<HBLScanner handleScan={handleScan} />
 			)}
-			<div className="container mx-auto p-2 rounded-lg ">
-				<Card className=" gap-2 mt-2">
-					<CardHeader className="flex m-0 pt-2 pb-0 flex-col gap-2">
-						<CardTitle className="flex flex-col gap-2">
-							<span className="text-sm font-medium">{shipmentsInInvoice?.receiver?.name}</span>
-							<span className="text-sm font-medium">{shipmentsInInvoice?.receiver?.ci}</span>
-						</CardTitle>
-					</CardHeader>
-					<CardContent className="flex flex-col gap-2">
+
+			{shipmentsInInvoice ? (
+				<div className="container mx-auto p-2 rounded-lg ">
+					<div className="mt-2 pb-2 text-xs flex justify-between items-center">
 						<div className="flex flex-col gap-2">
-							<span className="text-xs text-gray-500">{shipmentsInInvoice?.receiver?.address}</span>
-							<span className="text-xs text-gray-500">{shipmentsInInvoice?.receiver?.mobile}</span>
+							<span className="flex items-center gap-2">
+								<File className="h-4 w-4 text-muted-foreground" />
+								<span className="text-sm text-muted-foreground">Factura</span>
 
-							<div className="flex gap-2">
-								<span className="text-xs text-gray-500">{shipmentsInInvoice?.receiver?.state}</span>
-								<span className="text-xs text-gray-500">{shipmentsInInvoice?.receiver?.city}</span>
-							</div>
+								{shipmentsInInvoice?.invoiceId}
+							</span>
+							<span className="flex items-center gap-2">
+								<Calendar className="h-4 w-4 text-muted-foreground" />
+								{formatDate(shipmentsInInvoice?.invoiceDate)}
+							</span>
 						</div>
-					</CardContent>
-					
-
-					{shipmentsInInvoice?.shipments?.length > 0 && (
-						<Badge variant="outline">
-							{
-								shipmentsInInvoice?.shipments?.filter((shipment: Shipment) => shipment.isScanned)
-									.length
-							}
-							/{shipmentsInInvoice?.shipments?.length}
-						</Badge>
-					)}
+						<div className="flex items-center gap-2">
+							<Badge className="ml-2">
+								<div className="flex items-center gap-1">
+									<span>
+										{
+											shipmentsInInvoice?.shipments?.filter(
+												(shipment: Shipment) => shipment.isScanned,
+											).length
+										}
+										/ {shipmentsInInvoice?.shipments?.length}
+									</span>
+									<span></span>
+								</div>
+							</Badge>
+							<Button variant="ghost" size="sm" className="h-8 px-2">
+								{shipmentsInInvoice?.shipments?.length > 0 ? (
+									<ChevronUp className="h-5 w-5" />
+								) : (
+									<ChevronDown className="h-5 w-5" />
+								)}
+							</Button>
+						</div>
+					</div>
+					<Separator />
 
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)}>
@@ -170,23 +188,41 @@ export default function DeliveryPage() {
 							</div>
 						</form>
 					</Form>
-				</Card>
-				<div className="flex mt-4 flex-col gap-2">
-					<ScrollArea className=" h-[50vh]">
-						{isLoading && (
-							<div className="flex items-center justify-center h-full">
-								<Loader />
-							</div>
-						)}
-						{isError && (
-							<div className="flex items-center justify-center h-full">
-								<AlertCircle className="w-4 h-4 text-red-500" />
-							</div>
-						)}
-						<ShipmentListView shipments={shipmentsInInvoice?.shipments || []} />
-					</ScrollArea>
+
+					<div className="flex mt-4 flex-col gap-2">
+						<ScrollArea className=" h-[50vh]">
+							{isLoading && (
+								<div className="flex items-center justify-center h-full">
+									<Loader />
+								</div>
+							)}
+							{isError && (
+								<div className="flex items-center justify-center h-full">
+									<AlertCircle className="w-4 h-4 text-red-500" />
+								</div>
+							)}
+							<ShipmentListView shipments={shipmentsInInvoice?.shipments || []} />
+						</ScrollArea>
+					</div>
 				</div>
-			</div>
+			) : isLoading ? (
+				<div className="flex items-center justify-center h-full">
+					<Loader />
+				</div>
+			) : (
+				<NoShipments />
+			)}
 		</div>
 	);
 }
+
+const InvoiceDetails = ({ invoice }: { invoice: Invoice }) => {
+	return (
+		<div className="flex flex-col gap-2">
+			<span className="flex items-center gap-2">
+				<File className="h-4 w-4 text-muted-foreground" />
+				<span className="text-sm text-muted-foreground">Factura</span>
+			</span>
+		</div>
+	);
+};

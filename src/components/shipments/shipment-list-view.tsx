@@ -17,24 +17,24 @@ const shipmentsProps = z.object({
 type Shipment = z.infer<typeof shipmentsProps>["shipments"][number];
 
 export default function ShipmentListView({ shipments }: { shipments: Shipment[] }) {
-
 	const orderShipments = shipments.sort((a, b) => {
 		if (a.isScanned && !b.isScanned) return -1;
 		if (!a.isScanned && b.isScanned) return 1;
 		return 0;
 	});
-	
-	
+
 	return (
-		<div className="flex flex-col  gap-2 pb-2 pr-2  ">
+		<div className="flex flex-col  gap-2 pb-2 pr-4  ">
 			{orderShipments?.map((shipment) => (
 				<div
-					className="flex flex-1 min-h-20 justify-between items-center gap-4 px-2 border rounded-lg py-2"
+					className={`flex flex-1 min-h-20 justify-between items-center gap-4 px-2  rounded-lg py-2 ${
+						shipment.isScanned ? "bg-green-800/40 border-green-800/40" : "border"
+					}`}
 					key={shipment?.hbl}
 				>
 					<div className="text-sm flex flex-col  justify-between">
 						<span className="text-sm ">{shipment?.hbl}</span>
-						<p className="text-xs  dark:text-muted-foreground">{shipment?.description}</p>
+						<p className="text-xs ">{shipment?.description}</p>
 					</div>
 
 					<div className=" flex justify-end w-full items-center">
@@ -52,7 +52,6 @@ export default function ShipmentListView({ shipments }: { shipments: Shipment[] 
 						) : (
 							<div className="flex items-center gap-1">
 								<span className="text-xs text-gray-500">{shipment?.status}</span>
-								
 							</div>
 						)}
 					</div>
