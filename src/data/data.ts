@@ -20,7 +20,7 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role];
 
 export const statuses: Status[] = [
-	{
+	/* {
 		id: 5,
 		name: "Desagrupar",
 		link: "/ungroup",
@@ -60,7 +60,7 @@ export const statuses: Status[] = [
 			Role.DELIVERY_DRIVER,
 		],
 		icon: "OUT_FOR_DELIVERY",
-	},
+	}, */
 	{
 		id: 10,
 		name: "Entregar",
