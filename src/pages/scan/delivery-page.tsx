@@ -216,13 +216,4 @@ export default function DeliveryPage() {
 	);
 }
 
-const InvoiceDetails = ({ invoice }: { invoice: Invoice }) => {
-	return (
-		<div className="flex flex-col gap-2">
-			<span className="flex items-center gap-2">
-				<File className="h-4 w-4 text-muted-foreground" />
-				<span className="text-sm text-muted-foreground">Factura</span>
-			</span>
-		</div>
-	);
-};
+
