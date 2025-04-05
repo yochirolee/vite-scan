@@ -28,7 +28,9 @@ export default function ShipmentListView({ shipments }: { shipments: Shipment[] 
 			{orderShipments?.map((shipment) => (
 				<div
 					className={`flex flex-1 min-h-20 justify-between items-center gap-4 px-2  rounded-lg py-2 ${
-						shipment.isScanned ? "bg-green-800/40 border-green-800/40" : "border"
+						shipment.isScanned
+							? "bg-gray-800/40 border-green-800/40"
+							: "bg-gray-800/10 text-muted-foreground border-gray-800/40"
 					}`}
 					key={shipment?.hbl}
 				>

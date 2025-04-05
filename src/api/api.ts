@@ -55,7 +55,6 @@ const api = {
 			return response.data;
 		},
 		updateUser: async (userId: string, user: Partial<User>) => {
-			console.log(user, "on APi");
 			const response = await axiosInstance.put(`/users/${userId}`, user);
 			return response.data;
 		},
@@ -147,7 +146,6 @@ const api = {
 		},
 
 		uploadImage: async (data: FormData, eventsId: string[]) => {
-			console.log(data, "data to submit on api");
 			const response = await axiosInstance.post("/images/upload-images", data, {
 				headers: {
 					"Content-Type": "multipart/form-data",

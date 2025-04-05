@@ -43,11 +43,26 @@ export const useGetShipmentByHbl = (hbl: string) => {
 };
 
 export const useGetAllShipmentsInInvoice = (hbl: string) => {
-	return useQuery({
+	const { data, isLoading, isError } = useQuery({
 		queryKey: ["getShipmentsInInvoice", hbl],
 		queryFn: () => api.shipments.getAllShipmentsInInvoice(hbl),
 		enabled: !!hbl,
+		retry: 0,
+		staleTime: 1000 * 60 * 5,
+		gcTime: 1000 * 60 * 10,
 	});
+	if (data) {
+		const result = {
+			...data,
+			shipments: data?.shipments?.map((shipment: Shipment) =>
+				shipment?.hbl === hbl
+					? { ...shipment, isScanned: true, timestamp: new Date().toISOString() }
+					: shipment,
+			),
+		};
+		return { data: result, isLoading, isError };
+	}
+	return { data, isLoading, isError };
 };
 
 export const useDeliveryShipments = () => {

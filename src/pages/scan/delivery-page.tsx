@@ -1,12 +1,5 @@
-import { useState } from "react";
-import {
-	AlertCircle,
-	Calendar,
-	ScanBarcode,
-	ChevronDown,
-	ChevronUp,
-	File,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertCircle, Calendar, ScanBarcode, ChevronDown, ChevronUp, File } from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -70,20 +63,30 @@ export default function DeliveryPage() {
 		},
 	});
 
-	// Update shipments when shipmentsInInvoice changes, maintaining previous data
+	const markShipmentAsScanned = () => {
+		shipmentsInInvoice?.shipments?.map((shipment: Shipment) =>
+			updateStatus.mutate({
+				hbl: shipment.hbl,
+				isScanned: true,
+				timestamp: new Date().toISOString(),
+			}),
+		);
+	};
 
-	const handleScan = (hbl: string) => {
-		const hblNumber = hbl.startsWith("CTE") ? hbl : hbl.split(",")[1];
-		const formattedHbl = hblNumber?.trim() ?? null;
-		if (shipmentsInInvoice?.shipments.find((shipment: Shipment) => shipment.hbl === formattedHbl)) {
+	const handleScan = (scannedHbl: string) => {
+		const hblNumber = scannedHbl.startsWith("CTE") ? scannedHbl : scannedHbl.split(",")[1];
+		const formattedHbl = hblNumber?.trim() ?? scannedHbl;
+		if (
+			shipmentsInInvoice?.shipments?.find((shipment: Shipment) => shipment.hbl === formattedHbl)
+		) {
 			updateStatus.mutate({
 				hbl: formattedHbl,
 				isScanned: true,
 				timestamp: new Date().toISOString(),
 			});
-			return;
+		} else {
+			setHbl(formattedHbl);
 		}
-		setHbl(formattedHbl);
 	};
 
 	/* const clearCache = () => {
@@ -126,7 +129,7 @@ export default function DeliveryPage() {
 		<div className="relative  m-2  h-[90vh]">
 			<div className="absolute z-10 top-0 right-2">
 				<Button variant="ghost" onClick={() => setIsCameraOpen(!isCameraOpen)}>
-					<ScanBarcode className="w-4 h-4" />
+					<ScanBarcode className="w-4 h-4 text-sky-600 animate-pulse" />
 				</Button>
 			</div>
 			{isCameraOpen ? (
@@ -139,19 +142,17 @@ export default function DeliveryPage() {
 				<div className="container mx-auto p-2 rounded-lg ">
 					<div className="mt-2 pb-2 text-xs flex justify-between items-center">
 						<div className="flex flex-col gap-2">
-							<span className="flex items-center gap-2">
-								<File className="h-4 w-4 text-muted-foreground" />
-								<span className="text-sm text-muted-foreground">Factura</span>
+							<span className="flex items-center gap-1">
+								<File className="h-4 w-4 text-foreground-muted" />
 
-								{shipmentsInInvoice?.invoiceId}
-							</span>
-							<span className="flex items-center gap-2">
-								<Calendar className="h-4 w-4 text-muted-foreground" />
-								{formatDate(shipmentsInInvoice?.invoiceDate)}
+								<p className="text-sm text-foreground">{shipmentsInInvoice?.invoiceId}</p>
 							</span>
 						</div>
 						<div className="flex items-center gap-2">
-							<Badge className="ml-2">
+							<Button variant="outline" size="sm" onClick={() => markShipmentAsScanned()}>
+								Mark All
+							</Button>
+							<Badge className="ml-2 bg-sky-500/20 text-sky-500">
 								<div className="flex items-center gap-1">
 									<span>
 										{
@@ -179,7 +180,7 @@ export default function DeliveryPage() {
 						<form onSubmit={form.handleSubmit(onSubmit)}>
 							<div className=" flex m-1 p-2 justify-center items-center ">
 								<Button
-									className="w-full"
+									className="w-full bg-sky-500/20 text-sky-500 hover:bg-sky-500/40"
 									disabled={shipmentsInInvoice?.shipments?.length === 0}
 									type="submit"
 								>
@@ -210,10 +211,17 @@ export default function DeliveryPage() {
 					<Loader />
 				</div>
 			) : (
-				<NoShipments />
+				<>
+					{isError ? (
+						<div className="flex gap-2 items-center justify-center mt-8">
+							<AlertCircle className="w-4 h-4 text-red-500" />
+							<p>No se encontraron envíos</p>
+						</div>
+					) : (
+						<NoShipments />
+					)}
+				</>
 			)}
 		</div>
 	);
 }
-
-
