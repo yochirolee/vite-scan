@@ -99,6 +99,10 @@ const api = {
 			const response = await axiosInstance.get(`/shipments/hbl/${hbl}`);
 			return response.data;
 		},
+		getShipmentByUser: async () => {
+			const response = await axiosInstance.get(`/shipments/user`);
+			return response.data;
+		},
 
 		/* // Get all shipments in an invoice once a hbl is scanned
 		getShipmentsInInvoice: async (hbl: string) => {

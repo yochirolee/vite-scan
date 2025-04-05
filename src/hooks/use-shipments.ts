@@ -65,6 +65,13 @@ export const useGetAllShipmentsInInvoice = (hbl: string) => {
 	return { data, isLoading, isError };
 };
 
+export const useGetShipmentsByUser = () => {
+	return useQuery({
+		queryKey: ["getShipmentsByUser"],
+		queryFn: () => api.shipments.getShipmentByUser(),
+	});
+};
+
 export const useDeliveryShipments = () => {
 	return useMutation({
 		mutationFn: (shipments: { hbl: string; timestamp: string }[]) =>

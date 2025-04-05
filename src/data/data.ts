@@ -74,6 +74,19 @@ export const statuses: Status[] = [
 		],
 		icon: "DELIVERED",
 	},
+	{
+		id: 11,
+		name: "Historial",
+		link: "/history",
+		allowedRoles: [
+			Role.ROOT,
+			Role.ADMINISTRATOR,
+			Role.AGENCY_ADMIN,
+			Role.MESSENGER,
+			Role.DELIVERY_DRIVER,
+		],
+		icon: "HISTORY",
+	},
 ];
 
 // Utility function to get statuses by role

@@ -8,7 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import DeliveryPage from "@/pages/scan/delivery-page";
 import DeliveryPhotosForm from "@/pages/scan/delivery-photos-form";
 import DeliverySignature from "@/pages/scan/delivery-signature";
-
+import ShipmentsHistory from "@/pages/history/shipments-history";
 export default function AppRouter(): JSX.Element {
 	return (
 		<ErrorBoundary fallback={<div>Something went wrong</div>}>
@@ -21,6 +21,7 @@ export default function AppRouter(): JSX.Element {
 						<Route path="delivery" element={<DeliveryPage />} />
 						<Route path="delivery/photos" element={<DeliveryPhotosForm/>} />
 						<Route path="delivery/signature" element={<DeliverySignature />} />
+						<Route path="history" element={<ShipmentsHistory />} />
 						<Route path="*" element={<Navigate to="/" />} />
 					</Route>
 					<Route path="/login" element={<LoginPage />} />
