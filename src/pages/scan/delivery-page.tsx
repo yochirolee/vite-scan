@@ -19,7 +19,6 @@ import { toast } from "sonner";
 import ShipmentListView from "@/components/shipments/shipment-list-view";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { useNavigate } from "react-router-dom";
-import { formatDate } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import NoShipments from "@/components/no-shipments";
 
