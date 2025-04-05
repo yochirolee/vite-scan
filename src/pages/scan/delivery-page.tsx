@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { AlertCircle, Calendar, ScanBarcode, ChevronDown, ChevronUp, File } from "lucide-react";
+import { useState } from "react";
+import { AlertCircle, ScanBarcode, ChevronDown, ChevronUp, File } from "lucide-react";
 import { HBLScanner } from "@/components/hbl-scanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
