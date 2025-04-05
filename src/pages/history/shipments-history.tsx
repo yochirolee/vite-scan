@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
-import { Loader2 } from "lucide-react";
 import { Loader } from "@/components/common/loader";
 
 interface Shipment {
