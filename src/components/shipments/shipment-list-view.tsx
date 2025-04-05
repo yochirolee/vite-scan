@@ -2,6 +2,8 @@ import { formatDate } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 import { z } from "zod";
 import ShipmentSheetDetails from "./shipment-sheet-details";
+import { Button } from "../ui/button";
+import { useUpdateShipmentStatus } from "@/hooks/use-shipments";
 const shipmentsProps = z.object({
 	shipments: z.array(
 		z.object({
@@ -22,6 +24,16 @@ export default function ShipmentListView({ shipments }: { shipments: Shipment[] 
 		if (!a.isScanned && b.isScanned) return 1;
 		return 0;
 	});
+	const updateStatus = useUpdateShipmentStatus();
+
+	const handleDelivery = (hbl: string) => {
+		//update shipment status to delivered
+		updateStatus.mutate({
+			hbl,
+			isScanned: true,
+			timestamp: new Date().toISOString(),
+		});
+	};
 
 	return (
 		<div className="flex flex-col  gap-2 pb-2 pr-4  ">
@@ -52,9 +64,12 @@ export default function ShipmentListView({ shipments }: { shipments: Shipment[] 
 								</span>
 							</div>
 						) : (
-							<div className="flex items-center gap-1">
-								<span className="text-xs text-gray-500">{shipment?.status}</span>
-							</div>
+							<Button
+								onClick={() => handleDelivery(shipment?.hbl)}
+								className="bg-green-500/10 text-white hover:bg-green-600"
+							>
+								<span className="text-xs">Entregar</span>
+							</Button>
 						)}
 					</div>
 					<ShipmentSheetDetails hbl={shipment?.hbl} />
