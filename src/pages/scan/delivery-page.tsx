@@ -149,7 +149,7 @@ export default function DeliveryPage() {
 						</div>
 						<div className="flex items-center gap-2">
 							<Button variant="outline" size="sm" onClick={() => markShipmentAsScanned()}>
-								Mark All
+								Marcar Todos
 							</Button>
 							<Badge className="ml-2 bg-sky-500/20 text-sky-500">
 								<div className="flex items-center gap-1">
@@ -179,7 +179,8 @@ export default function DeliveryPage() {
 						<form onSubmit={form.handleSubmit(onSubmit)}>
 							<div className=" flex m-1 p-2 justify-center items-center ">
 								<Button
-									className="w-full bg-sky-500/20 text-sky-500 hover:bg-sky-500/40"
+									variant="outline"
+									className="w-full bg-sky-500/10 text-sky-500 border-none hover:bg-sky-600 "
 									disabled={shipmentsInInvoice?.shipments?.length === 0}
 									type="submit"
 								>

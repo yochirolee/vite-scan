@@ -56,7 +56,12 @@ export default function ShipmentListView({ shipments }: { shipments: Shipment[] 
 							<div className="flex flex-col justify-end gap-1">
 								<div className="flex justify-end gap-1">
 									<CheckCircle className="w-4 h-4 text-green-500" />
-									<span className="text-xs text-green-500">Scanned {shipment?.status}</span>
+									<span className="text-xs text-green-500">Scanned </span>
+								</div>
+								<div className="flex justify-end gap-1">
+									<span className="text-xs text-muted-foreground font-extralight">
+										{shipment?.status}
+									</span>
 								</div>
 
 								<span className="text-xs font-light justify-end ">

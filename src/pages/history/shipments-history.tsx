@@ -7,6 +7,8 @@ import { useMemo } from "react";
 import { Loader } from "@/components/common/loader";
 import { getIcon } from "@/components/common/getIcon";
 import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface Shipment {
 	hbl: string;
@@ -55,8 +57,13 @@ export default function ShipmentsHistory() {
 		return <div className="grid justify-center items-center h-full">Error loading shipments</div>;
 
 	return (
-		<div className="container mx-auto p-2 rounded-lg">
-			<h1 className="mb-4">History</h1>
+		<div className="container mx-auto  rounded-lg">
+			<div className="flex justify-between mx-4 items-center">
+				<h1 className="mb-4">History</h1>
+				<Link to="/delivery">
+					<Button className="mb-4">Realizar Nueva Entrega</Button>
+				</Link>
+			</div>
 			<ScrollArea className="h-[500px] p-1">
 				{groupedShipments.map((group) => (
 					<Card className="mb-4 mx-2" key={group.invoiceId}>

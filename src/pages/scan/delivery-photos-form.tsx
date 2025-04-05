@@ -141,10 +141,10 @@ export default function DeliveryPhotosForm() {
 				<button
 					onClick={triggerFileInput}
 					disabled={uploadMutation.isPending}
-					className="w-full   p-4 flex flex-col gap-2 border-2 border-dashed border-muted-foreground/30 rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
+					className="w-full h-48  p-4 flex flex-col gap-2 border-2 border-dashed rounded-md  items-center justify-center text-muted-foreground disabled:opacity-50"
 				>
-					<Camera className="h-6 w-6" />
-					<p className="text-xs">Subir foto o Tomar foto</p>
+					<Camera className="h-10 w-10 text-sky-500 animate-pulse" />
+					<p className="text-xs font-bold">Realizar Fotos de la Entrega</p>
 				</button>
 			</div>
 
@@ -190,7 +190,11 @@ export default function DeliveryPhotosForm() {
 
 			<p className="text-xs text-muted-foreground text-center">Toma fotos de la entrega</p>
 			<div className="flex justify-center">
-				<Button variant="outline" onClick={() => clearCache()}>
+				<Button
+					variant="outline"
+					className="bg-sky-500/10 text-sky-500 border-none hover:bg-sky-600"
+					onClick={() => clearCache()}
+				>
 					Terminar Entrega
 				</Button>
 			</div>
