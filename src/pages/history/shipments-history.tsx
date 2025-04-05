@@ -5,6 +5,8 @@ import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
 import { Loader } from "@/components/common/loader";
+import { getIcon } from "@/components/common/getIcon";
+import ShipmentSheetDetails from "@/components/shipments/shipment-sheet-details";
 
 interface Shipment {
 	hbl: string;
@@ -14,7 +16,7 @@ interface Shipment {
 	description: string;
 	state: string;
 	city: string;
-	status: { name: string };
+	status: { name: string; code: string };
 	timestamp: string;
 }
 
@@ -58,12 +60,12 @@ export default function ShipmentsHistory() {
 			<ScrollArea className="h-[500px] p-1">
 				{groupedShipments.map((group) => (
 					<Card className="mb-4 mx-2" key={group.invoiceId}>
-						<CardHeader className="p-2 border-b">
-							<CardTitle className="text-sm font-bold mb-2 text-sky-500">
+						<CardHeader className="p-2 border-b bg-sky-500/10">
+							<CardTitle className="text-sm font-bold  text-sky-500">
 								Invoice #{group.invoiceId}
 							</CardTitle>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="p-2">
 							{group.shipments.map((shipment: Shipment) => (
 								<div
 									className="flex justify-between my-2 border-b border-dashed py-2"
@@ -75,13 +77,17 @@ export default function ShipmentsHistory() {
 											{shipment.description}
 										</p>
 									</div>
-									<div className="flex flex-col items-end">
-										<Badge variant="outline" className="bg-green-500/20 text-green-500 border-none">
-											{shipment.status.name}
-										</Badge>
-										<time className="text-[12px] font-light text-foreground/80">
-											{formatDate(shipment.timestamp)}
-										</time>
+									<div className="flex  items-end">
+										<div className="flex flex-col items-end">
+											<Badge variant="secondary" className=" flex items-center gap-2  border-none">
+												{getIcon(shipment.status.code)}
+												<div className="truncate">{shipment.status.name}</div>
+											</Badge>
+											<time className="text-[12px] font-light text-foreground/80">
+												{formatDate(shipment.timestamp)}
+											</time>
+										</div>
+										<ShipmentSheetDetails hbl={shipment.hbl} />
 									</div>
 								</div>
 							))}
